@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
+  <link href="libraries/bootstrap.min.css" rel="stylesheet">
+  <link href="css/custom.css" rel="stylesheet">
+  <script src="libraries/bootstrap.bundle.min.js"></script>
+
+  <style>
+    html {
+      background-color: rgba(246, 246, 240, 1);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container-fluid c-header-shadow">
+    <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+      <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+        <img width="100" src="img/logo.jpg" alt="Astra Logo" />
+        <h3 class="ms-5 mb-0 c-darkgreen">Inventory Management System</h3>
+      </a>
+
+      <ul class="nav nav-pills align-items-center">
+        <li class="nav-item px-2"><a href="#" class="nav-link active" aria-current="page">Dashboard</a></li>
+        <li class="nav-item px-2"><a href="#" class="nav-link">Inventory</a></li>
+        <li class="nav-item px-2 dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Requests
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Purchase Requests</a></li>
+            <li><a class="dropdown-item" href="#">Material Requests</a></li>
+          </ul>
+        </li>
+        <i class="bi bi-box-arrow-right"></i>
+        <li class="nav-item px-2">
+          <a href="login.html" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
+              <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0z"/>
+              <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/>
+            </svg>
+          </a>
+        </li>
+
+      </ul>
+    </header>
+  </div>
+
+  
+  <div class="container-fluid">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">First</th>
+          <th scope="col">Last</th>
+          <th scope="col">Handle</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">1</th>
+          <td>Mark</td>
+          <td>Otto</td>
+          <td>@mdo</td>
+        </tr>
+        <tr>
+          <th scope="row">2</th>
+          <td>Jacob</td>
+          <td>Thornton</td>
+          <td>@fat</td>
+        </tr>
+        <tr>
+          <th scope="row">3</th>
+          <td colspan="2">Larry the Bird</td>
+          <td>@twitter</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</body>
+
+</html>
