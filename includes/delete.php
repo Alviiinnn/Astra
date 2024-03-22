@@ -1,0 +1,46 @@
+<?php
+require "dbconn.php";
+
+$request_type = mysqli_escape_string($conn, $_POST['requestType']);
+
+
+if ($request_type == "Inventory") {
+    $id = mysqli_escape_string($conn, $_POST['data_id']);
+
+    $sql = "DELETE from inventory_tbl WHERE item_id = '$id' ";
+
+    if ($conn->query($sql) === TRUE) {
+        echo "Delete Success!"; //DO NOT REMOVE THE WORD 'SUCCESS' | Reference: inventory.js
+    } else {
+        echo "Error " . $sql . "<br>" . $conn->error;
+    }
+}
+
+
+if ($request_type == "Purchase_Request") {
+    $id = mysqli_escape_string($conn, $_POST['data_id']);
+
+    $sql = "DELETE from purchase_req_tbl WHERE pr_id = '$id' ";
+
+    if ($conn->query($sql) === TRUE) {
+        echo "Delete Success!"; //DO NOT REMOVE THE WORD 'SUCCESS' | Reference: inventory.js
+    } else {
+        echo "Error " . $sql . "<br>" . $conn->error;
+    }
+}
+
+
+if ($request_type == "Material_Request") {
+    $id = mysqli_escape_string($conn, $_POST['data_id']);
+
+    $sql = "DELETE from material_req_tbl WHERE mat_req_id = '$id' ";
+
+    if ($conn->query($sql) === TRUE) {
+        echo "Delete Success!"; //DO NOT REMOVE THE WORD 'SUCCESS' | Reference: inventory.js
+    } else {
+        echo "Error " . $sql . "<br>" . $conn->error;
+    }
+}
+
+
+$conn->close();
