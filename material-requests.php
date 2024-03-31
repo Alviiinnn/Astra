@@ -13,7 +13,7 @@ if (!isset($_SESSION['username'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Material Requests</title>
+    <title>Withdrawal Requests</title>
     <link href="libraries/bootstrap.min.css" rel="stylesheet">
     <link href="css/custom.css" rel="stylesheet">
     <script src="libraries/bootstrap.bundle.min.js"></script>
@@ -38,36 +38,32 @@ if (!isset($_SESSION['username'])) {
     <div class="container-fluid c-header-shadow bg-white">
         <div class="container">
             <header class="d-flex flex-wrap justify-content-center mb-4">
-                <a href="dashboard.php"
-                    class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+                <a href="dashboard.php" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
                     <img class="pt-1 pb-2" width="90" src="img/logo.jpg" alt="Astra Logo" />
                     <h4 class="ms-5 mb-0 c-darkgreen">Inventory Management System</h4>
                 </a>
 
                 <ul class="nav nav-pills align-items-center">
-                    <li class="nav-item px-2"><a href="dashboard.php" class="nav-link c-darkgreen"
-                            aria-current="page">Dashboard</a></li>
+                    <li class="nav-item px-2"><a href="dashboard.php" class="nav-link c-darkgreen" aria-current="page">Dashboard</a></li>
                     <li class="nav-item px-2"><a href="inventory.php" class="nav-link c-darkgreen">Inventory</a>
                     </li>
                     <li class="nav-item px-2 dropdown c-bold">
-                        <a class="nav-link c-darkgreen dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                            aria-expanded="false">
+                        <a class="nav-link c-darkgreen dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Requests
                         </a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="purchase-requests.php">Purchase Requests</a></li>
-                            <li><a class="dropdown-item" href="material-requests.php">Material Requests</a></li>
+                            <li><a class="dropdown-item" href="material-requests.php">Withdrawal Requests</a></li>
                         </ul>
                     </li>
+                    <li class="nav-item px-2"><a href="delivery.php" class="nav-link c-darkgreen">Delivery</a></li>
+
                     <i class="bi bi-box-arrow-right"></i>
                     <li class="nav-item px-2" name="logout">
                         <a href="index.php" class="nav-link c-darkgreen">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
-                                class="bi bi-box-arrow-right" viewBox="0 0 16 16">
-                                <path fill-rule="evenodd"
-                                    d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0z" />
-                                <path fill-rule="evenodd"
-                                    d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z" />
+                            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0z" />
+                                <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z" />
                             </svg>
                         </a>
                     </li>
@@ -78,17 +74,16 @@ if (!isset($_SESSION['username'])) {
     </div>
 
     <div class="container">
-        <h5 class="text-center mb-4">Material Requests</h5>
+        <h5 class="text-center mb-4">Withdrawal Requests</h5>
         <hr>
     </div>
 
     <div class="container c-bg-khaki">
         <div class="row">
-            <button id="addRequest" class="btn btn-success ms-1" data-bs-toggle="modal"
-                data-bs-target="#modalAddRequest">Add Request</button>
+            <button id="addRequest" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAddRequest">Add Request</button>
 
             <div class="col-lg-2">
-                <select id="statusFilter" class="form-select c-float-right mb-4" style="width: 10em;">
+                <select id="statusFilter" class="form-select c-float-right" style="width: 10em;">
                     <option value="0" selected disabled>- Status Filter -</option>
                     <option value="pending">Pending</option>
                     <option value="processing">Processing</option>
@@ -142,15 +137,14 @@ if (!isset($_SESSION['username'])) {
 
     <!-- MODALS -->
 
-    <div class="modal fade" id="modalAddRequest" tabindex="-1" aria-labelledby="modalAddRequestLabel" aria-hidden="true"
-        data-bs-backdrop="static">
+    <div class="modal fade" id="modalAddRequest" tabindex="-1" aria-labelledby="modalAddRequestLabel" aria-hidden="true" data-bs-backdrop="static">
         <div class="modal-dialog modal-dialog-centered " style="max-width: 50em;">
             <div class="modal-content">
                 <div class="modal-header justify-content-center c-bg-yellow">
-                    <h1 class="modal-title fs-5 text-center" id="modalAddRequestLabel">Material Request Form</h1>
+                    <h1 class="modal-title fs-5 text-center" id="modalAddRequestLabel">Withdrawal Request Form</h1>
                     <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
                 </div>
-                <div class="modal-body container">
+                <div class="modal-body container p-4 pb-3">
                     <div class="container" role="child">
                         <div class="row align-items-center justify-content-end">
                             <label class="col-lg-3 text-end">Request Slip No:</label>
@@ -223,15 +217,15 @@ if (!isset($_SESSION['username'])) {
                             <label class="col-lg-2">UNIT:</label>
                             <div class="col-lg-10 d-flex justify-content-between">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="phase" data-required="1">
+                                    <input type="text" class="form-control" id="phase" data-required="1" placeholder="">
                                     <label for="phase">Phase</label>
                                 </div>
-                                <div class="form-floating">
-                                    <input type="text" class="form-control" id="block" data-required="1">
+                                <div class="form-floating ms-1">
+                                    <input type="text" class="form-control" id="block" data-required="1" placeholder="">
                                     <label for="block">Block</label>
                                 </div>
-                                <div class="form-floating">
-                                    <input type="text" class="form-control" id="lot" data-required="1">
+                                <div class="form-floating ms-1">
+                                    <input type="text" class="form-control" id="lot" data-required="1" placeholder="">
                                     <label for="lot">Lot</label>
                                 </div>
 
@@ -274,13 +268,22 @@ if (!isset($_SESSION['username'])) {
                                 <input type="radio" class="btn-check" name="intended_for" id="manors" value="manors" />
                                 <label class="btn btn-outline-secondary flex-fill" for="manors">Manors</label>
 
-                                <input type="radio" class="btn-check" name="intended_for" id="residences"
-                                    value="residences" />
+                                <input type="radio" class="btn-check" name="intended_for" id="residences" value="residences" />
                                 <label class="btn btn-outline-secondary flex-fill" for="residences">Residences</label>
                             </div>
-                            <!-- <div class="col-lg-2">
-                                <input type="text" class="form-control" id="intended_others" placeholder="Others">
-                            </div> -->
+                        </div>
+
+                        <div class="row mb-2 align-items-center">
+                            <label class="col-lg-2">Status:</label>
+                            <div class="col-lg-3 justify-content-between">
+                                <select name="status" class="form-select" data-required="1">
+                                    <option value="0" selected disabled>- Select Status -</option>
+                                    <option value="Pending">Pending</option>
+                                    <option value="Processing">Processing</option>
+                                    <option value="Released">Released</option>
+                                    <option value="Denied">Denied</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
 
@@ -294,15 +297,14 @@ if (!isset($_SESSION['username'])) {
         </div>
     </div>
 
-    <div class="modal fade" id="modalViewDetails" tabindex="-1" aria-labelledby="modalViewDetailsLabel"
-        aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal fade" id="modalViewDetails" tabindex="-1" aria-labelledby="modalViewDetailsLabel" aria-hidden="true" data-bs-backdrop="static">
         <div class="modal-dialog modal-dialog-centered " style="max-width: 50em;">
             <div class="modal-content">
                 <div class="modal-header justify-content-center c-bg-yellow">
-                    <h1 class="modal-title fs-5 text-center" id="modalViewDetailsLabel">Material Request Details</h1>
+                    <h1 class="modal-title fs-5 text-center" id="modalViewDetailsLabel">Withdrawal Request Details</h1>
                     <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
                 </div>
-                <div class="modal-body container">
+                <div class="modal-body container p-4 pb-3">
                     <div class="container" role="child">
                         <div class="row align-items-center justify-content-end">
                             <label class="col-lg-3 text-end">Request Slip No:</label>
@@ -329,8 +331,7 @@ if (!isset($_SESSION['username'])) {
                                     <tr>
                                         <!-- <td>1</td> -->
                                         <td data-dropdown="1" data-col="item" data-required="1">
-                                            <select name="details_itemlist" class="form-select border-0"
-                                                data-required="1">
+                                            <select name="details_itemlist" class="form-select border-0" data-required="1">
                                                 <option value="0" selected disabled>- Select an Item -</option>
                                             </select>
                                         </td>
@@ -358,18 +359,15 @@ if (!isset($_SESSION['username'])) {
                             <label class="col-lg-2">UNIT:</label>
                             <div class="col-lg-10 d-flex justify-content-between">
                                 <div class="form-floating">
-                                    <input name="details_phase" type="text" class="form-control" id="details_phase"
-                                        data-required="1">
+                                    <input name="details_phase" type="text" class="form-control" id="details_phase" data-required="1" placeholder="">
                                     <label for="phase">Phase</label>
                                 </div>
-                                <div class="form-floating">
-                                    <input name="details_block" type="text" class="form-control" id="details_block"
-                                        data-required="1">
+                                <div class="form-floating ms-1">
+                                    <input name="details_block" type="text" class="form-control" id="details_block" data-required="1" placeholder="">
                                     <label for="block">Block</label>
                                 </div>
-                                <div class="form-floating">
-                                    <input name="details_lot" type="text" class="form-control" id="details_lot"
-                                        data-required="1">
+                                <div class="form-floating ms-1">
+                                    <input name="details_lot" type="text" class="form-control" id="details_lot" data-required="1" placeholder="">
                                     <label for="lot">Lot</label>
                                 </div>
                             </div>
@@ -405,18 +403,14 @@ if (!isset($_SESSION['username'])) {
                         <div class="row mb-2 align-items-center">
                             <label class="col-lg-2">Intended for:</label>
                             <div class="col-lg-8 d-flex">
-                                <input type="radio" class="btn-check" name="details_intended_for" id="details_villas"
-                                    value="villas" />
+                                <input type="radio" class="btn-check" name="details_intended_for" id="details_villas" value="villas" />
                                 <label class="btn btn-outline-secondary flex-fill" for="details_villas">Villas</label>
 
-                                <input type="radio" class="btn-check" name="details_intended_for" id="details_manors"
-                                    value="manors" />
+                                <input type="radio" class="btn-check" name="details_intended_for" id="details_manors" value="manors" />
                                 <label class="btn btn-outline-secondary flex-fill" for="details_manors">Manors</label>
 
-                                <input type="radio" class="btn-check" name="details_intended_for"
-                                    id="details_residences" value="residences" />
-                                <label class="btn btn-outline-secondary flex-fill"
-                                    for="details_residences">Residences</label>
+                                <input type="radio" class="btn-check" name="details_intended_for" id="details_residences" value="residences" />
+                                <label class="btn btn-outline-secondary flex-fill" for="details_residences">Residences</label>
                             </div>
                             <!-- <div class="col-lg-2">
                             <input type="text" class="form-control" id="intended_others" placeholder="Others">
@@ -440,8 +434,7 @@ if (!isset($_SESSION['username'])) {
 
                 </div>
                 <div class="modal-footer">
-                    <button name="cancel" type="button" class="btn btn-outline-secondary"
-                        data-bs-dismiss="modal">Cancel</button>
+                    <button name="cancel" type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
                     <button name="discard" class="btn btn-outline-secondary">Discard</button>
                     <button name="delete" type="button" class="btn btn-outline-danger">Delete</button>
                     <button name="modify" type="button" class="btn btn-warning">Modify</button>
@@ -458,12 +451,9 @@ if (!isset($_SESSION['username'])) {
         <div id="toastSuccess" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
             <div class="toast-header bg-success">
                 <!-- <img src="..." class="rounded me-2" alt="..."> -->
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
-                    class="bi bi-check2-circle text-white" viewBox="0 0 16 16">
-                    <path
-                        d="M2.5 8a5.5 5.5 0 0 1 8.25-4.764.5.5 0 0 0 .5-.866A6.5 6.5 0 1 0 14.5 8a.5.5 0 0 0-1 0 5.5 5.5 0 1 1-11 0" />
-                    <path
-                        d="M15.354 3.354a.5.5 0 0 0-.708-.708L8 9.293 5.354 6.646a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0z" />
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-check2-circle text-white" viewBox="0 0 16 16">
+                    <path d="M2.5 8a5.5 5.5 0 0 1 8.25-4.764.5.5 0 0 0 .5-.866A6.5 6.5 0 1 0 14.5 8a.5.5 0 0 0-1 0 5.5 5.5 0 1 1-11 0" />
+                    <path d="M15.354 3.354a.5.5 0 0 0-.708-.708L8 9.293 5.354 6.646a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0z" />
                 </svg>
                 <strong class="ms-2 me-auto text-white">SUCCESS</strong>
                 <!-- <small>11 mins ago</small> -->
@@ -476,12 +466,9 @@ if (!isset($_SESSION['username'])) {
     <div class="toast-container position-fixed top-0 end-0 p-3" data-bs-delay="20000" data-bs-autohide="false">
         <div id="toastDelete" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
             <div class="toast-header bg-danger">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="white"
-                    class="bi bi-exclamation-triangle" viewBox="0 0 16 16">
-                    <path
-                        d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.15.15 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.2.2 0 0 1-.054.06.1.1 0 0 1-.066.017H1.146a.1.1 0 0 1-.066-.017.2.2 0 0 1-.054-.06.18.18 0 0 1 .002-.183L7.884 2.073a.15.15 0 0 1 .054-.057m1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767z" />
-                    <path
-                        d="M7.002 12a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 5.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z" />
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="white" class="bi bi-exclamation-triangle" viewBox="0 0 16 16">
+                    <path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.15.15 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.2.2 0 0 1-.054.06.1.1 0 0 1-.066.017H1.146a.1.1 0 0 1-.066-.017.2.2 0 0 1-.054-.06.18.18 0 0 1 .002-.183L7.884 2.073a.15.15 0 0 1 .054-.057m1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767z" />
+                    <path d="M7.002 12a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 5.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z" />
                 </svg>
                 <strong class="ms-2 me-auto text-white">WARNING!</strong>
                 <!-- <small>11 mins ago</small> -->

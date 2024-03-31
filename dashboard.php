@@ -42,9 +42,11 @@ if (!isset($_SESSION['username'])) {
                         </a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="purchase-requests.php">Purchase Requests</a></li>
-                            <li><a class="dropdown-item" href="material-requests.php">Material Requests</a></li>
+                            <li><a class="dropdown-item" href="material-requests.php">Withdrawal Requests</a></li>
                         </ul>
                     </li>
+                    <li class="nav-item px-2"><a href="delivery.php" class="nav-link c-darkgreen">Delivery</a></li>
+
                     <!-- <i class="bi bi-box-arrow-right"></i> -->
                     <li class="nav-item px-2" name="logout">
                         <a href="index.php" class="nav-link c-darkgreen">

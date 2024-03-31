@@ -10,7 +10,6 @@ if ($request_type == "Inventory") {
     $uom = $_POST['data_uom'];
     $qty = $_POST['data_qty'];
     $unitcost = $_POST['data_unitcost'];
-    $brand = $_POST['data_brand'];
     $remarks = $_POST['data_remarks'];
     $base_stock_level = 0;
     $level;
@@ -44,7 +43,6 @@ if ($request_type == "Inventory") {
                 stock = '$qty',
                 unit_of_measurement = '$uom',
                 unit_cost = '$unitcost',
-                brand = '$brand',
                 remarks = '$remarks',
                 highest_stock = '$highest_qty',
                 stock_level = '$level'
@@ -62,11 +60,13 @@ if ($request_type == "Purchase_Request") {
     $id = $_POST['data_id'];
     $pr_num = $_POST['data_pr_num'];
     $item = $_POST['data_item'];
-    $qty = $_POST['data_qty'];
+    $qty_per_unit = $_POST['data_qty_per_unit'];
     $uom = $_POST['data_uom'];
+    $unit_per_batch = $_POST['data_unit_per_batch'];
     $unitcost = $_POST['data_unitcost'];
-    $amount = $_POST['data_amount'];
-    $brand = $_POST['data_brand'];
+    $total_qty  = $_POST['data_total_qty'];
+    $amount_per_unit  = $_POST['data_amount_per_unit'];
+    $total_amount  = $_POST['data_total_amount'];
     $remarks = $_POST['data_remarks'];
     $phase = $_POST['data_phase'];
     $block = $_POST['data_block'];
@@ -76,11 +76,13 @@ if ($request_type == "Purchase_Request") {
     $sql = "UPDATE purchase_req_tbl 
             SET pr_number = '$pr_num',
                 item_name = '$item',
-                quantity = '$qty',
+                qty_per_unit = '$qty_per_unit',
                 unit_of_measurement = '$uom',
+                unit_per_batch = '$unit_per_batch',
                 unit_cost = '$unitcost',
-                amount = '$amount',
-                brand = '$brand',
+                total_qty = '$total_qty',
+                amount_per_unit = '$amount_per_unit',
+                total_amount = '$total_amount',
                 remarks = '$remarks',
                 phase = '$phase',
                 block = '$block',

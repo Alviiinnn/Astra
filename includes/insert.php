@@ -11,7 +11,6 @@ if ($request_type == "Add_Stock") {
     $data_uom = $_POST['data_uom'];
     $data_qty = $_POST['data_qty'];
     $data_unitcost = $_POST['data_unitcost'];
-    $data_brand = $_POST['data_brand'];
     $data_remarks = $_POST['data_remarks'];
 
     $item = json_decode($data_item);
@@ -19,15 +18,14 @@ if ($request_type == "Add_Stock") {
     $uom = json_decode($data_uom);
     $qty = json_decode($data_qty);
     $unitcost = json_decode($data_unitcost);
-    $brand = json_decode($data_brand);
     $remarks = json_decode($data_remarks);
 
     $user = $_SESSION['username'];
 
     // Loop and Insert Items 
     for ($i = 0; $i < count($item); $i++) {
-        $sql = "INSERT INTO inventory_tbl (item_name, category, stock, unit_of_measurement, unit_cost, brand, remarks, highest_stock) 
-                VALUES ('$item[$i]', '$category[$i]', '$qty[$i]', '$uom[$i]', '$unitcost[$i]', '$brand[$i]', '$remarks[$i]', '$qty[$i]')";
+        $sql = "INSERT INTO inventory_tbl (item_name, category, stock, unit_of_measurement, unit_cost, remarks, highest_stock) 
+                VALUES ('$item[$i]', '$category[$i]', '$qty[$i]', '$uom[$i]', '$unitcost[$i]', '$remarks[$i]', '$qty[$i]')";
 
         if ($conn->query($sql) === TRUE) {
             echo "Insert Success!"; //DO NOT REMOVE THE WORD 'SUCCESS' | Reference: inventory.js
@@ -41,30 +39,35 @@ if ($request_type == "Add_Stock") {
 if ($request_type == "Add_Purchase_Request") {
     $purchase_num = $_POST['data_purchase_num'];
     $data_item = $_POST['data_item'];
-    $data_qty = $_POST['data_qty'];
+    $data_qty_per_unit = $_POST['data_qty_per_unit'];
     $data_uom = $_POST['data_uom'];
+    $data_unit_per_batch = $_POST['data_unit_per_batch'];
     $data_unitcost = $_POST['data_unitcost'];
-    $data_amount = $_POST['data_amount'];
-    $data_brand = $_POST['data_brand'];
+    $data_total_qty = $_POST['data_total_qty'];
+    $data_amount_per_unit = $_POST['data_amount_per_unit'];
+    $data_total_amount = $_POST['data_total_amount'];
     $data_remarks = $_POST['data_remarks'];
     $phase = $_POST['data_phase'];
     $block = $_POST['data_block'];
     $lot = $_POST['data_lot'];
+    $status = $_POST['data_status'];
 
     $item = json_decode($data_item);
-    $qty = json_decode($data_qty);
+    $qty_per_unit = json_decode($data_qty_per_unit);
     $uom = json_decode($data_uom);
+    $unit_per_batch = json_decode($data_unit_per_batch);
     $unitcost = json_decode($data_unitcost);
-    $amount = json_decode($data_amount);
-    $brand = json_decode($data_brand);
+    $total_qty = json_decode($data_total_qty);
+    $amount_per_unit = json_decode($data_amount_per_unit);
+    $total_amount = json_decode($data_total_amount);
     $remarks = json_decode($data_remarks);
 
     $user = $_SESSION['username'];
 
     for ($i = 0; $i < count($item); $i++) {
 
-        $sql = "INSERT INTO purchase_req_tbl (pr_number, item_name, quantity, unit_of_measurement, unit_cost, amount, brand, remarks, phase, block, lot) 
-                VALUES ('$purchase_num', '$item[$i]', '$qty[$i]', '$uom[$i]', '$unitcost[$i]', '$amount[$i]', '$brand[$i]', '$remarks[$i]', '$phase', '$block', '$lot')";
+        $sql = "INSERT INTO purchase_req_tbl (pr_number, item_name, qty_per_unit, unit_of_measurement, unit_per_batch, unit_cost, total_qty, amount_per_unit, total_amount, remarks, phase, block, lot, pr_status) 
+                VALUES ('$purchase_num', '$item[$i]', '$qty_per_unit[$i]', '$uom[$i]', '$unit_per_batch[$i]', '$unitcost[$i]', '$total_qty[$i]', '$amount_per_unit[$i]', '$total_amount[$i]', '$remarks[$i]', '$phase', '$block', '$lot', '$status')";
 
         if ($conn->query($sql) === TRUE) {
             echo "Insert Success!"; //DO NOT REMOVE THE WORD 'SUCCESS' | Reference: inventory.js

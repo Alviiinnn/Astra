@@ -18,11 +18,10 @@ $(document).ready(function () {
             { data: "ctr" },
             { data: "pr_number" },
             { data: "item" },
-            { data: "qty_per_unit" },
+            { data: "qty" },
             { data: "uom" },
-            { data: "unit_per_batch" },
             { data: "unitcost" },
-            { data: "total_qty" },
+            { data: "amount" },
             { data: "phase" },
             { data: "block" },
             { data: "lot" },
@@ -80,61 +79,44 @@ $("li[name=logout]").click(() => {
 
 // ON EVENTS
 $(document)
-    .on(
-        "keydown",
-        "td[data-col=qty_per_unit], td[data-col=unit_per_batch], td[data-col=unitcost]",
-        function (event) {
-            var key = String.fromCharCode(event.which);
-            var regex = /^\d+$/; // Regex for only digits
+    .on("keydown", "td[data-col=qty], td[data-col=unitcost]", function (event) {
+        var key = String.fromCharCode(event.which);
+        var regex = /^\d+$/; // Regex for only digits
 
-            // Allow backspace and delete keys
-            if (
-                event.keyCode === 8 ||
-                event.keyCode === 46 ||
-                event.keyCode === 9
-            ) {
-                return true;
-            }
-
-            if (event.keyCode > 95 && event.keyCode < 106) {
-                return true;
-            }
-
-            // Allow only digits and prevent default action for others
-            if (!regex.test(key)) {
-                event.preventDefault();
-                return false;
-            }
+        // Allow backspace and delete keys
+        if (
+            event.keyCode === 8 ||
+            event.keyCode === 46 ||
+            event.keyCode === 9
+        ) {
+            return true;
         }
-    )
 
-    .on("keyup", "td[data-col=qty_per_unit]", function () {
-        var qtyperunit = $(this).text();
-        var unitcost = $(this).next().next().next().text();
-        var total_qty = qtyperunit * 36;
-        var amountperunit = qtyperunit * unitcost;
+        if (event.keyCode > 95 && event.keyCode < 106) {
+            return true;
+        }
 
-        $(this).next().next().next().next().text(total_qty);
-        $(this).next().next().next().next().next().text(amountperunit);
+        // Allow only digits and prevent default action for others
+        if (!regex.test(key)) {
+            event.preventDefault();
+            return false;
+        }
+    })
+
+    .on("keyup", "td[data-col=qty]", function () {
+        var qty = $(this).text();
+        var unitcost = $(this).next().next().text();
+
+        var amount = qty * unitcost;
+        $(this).next().next().next().text(amount);
     })
 
     .on("keyup", "td[data-col=unitcost]", function () {
+        var qty = $(this).prev().prev().text();
         var unitcost = $(this).text();
-        var qtyperunit = $(this).prev().prev().prev().text();
-        var totalqty = $(this).next().text();
-        var amountperunit = qtyperunit * unitcost;
-        var totalamount = unitcost * totalqty;
-
-        $(this).next().next().text(amountperunit);
-        $(this).next().next().next().text(totalamount);
+        var amount = qty * unitcost;
+        $(this).next().text(amount);
     });
-
-// .on("keyup", "td[data-col=unitcost]", function () {
-//     var qty = $(this).prev().prev().text();
-//     var unitcost = $(this).text();
-//     var amount = qty * unitcost;
-//     $(this).next().text(amount);
-// });
 // ON EVENTS end
 
 // $("#table_main").DataTable({
@@ -162,8 +144,8 @@ $("button[name=addRow]").click(() => {
     var ctr = $("#table_form tr").length;
     var row = "<tr>";
     row += `<td>${ctr}</td>`;
-    row += "<td contenteditable data-col='item' data-required='1' class='text-start'></td>";
-    row += "<td contenteditable data-int='1' data-col='qty_per_unit'></td>";
+    row += "<td contenteditable data-col='item' data-required='1'></td>";
+    row += "<td contenteditable data-int='1' data-col='qty'>0</td>";
     row += "<td data-dropdown='1' data-col='uom'>";
     row += "    <select class='form-select border-0'>";
     row += "        <option>pcs</option>";
@@ -175,12 +157,11 @@ $("button[name=addRow]").click(() => {
     row += "        <option>ltrs</option>";
     row += "    </select>";
     row += "</td>";
-    row += "<td contenteditable data-int='1' data-col='unit_per_batch'></td>";
-    row += "<td contenteditable data-int='1' data-col='unitcost'></td>";
-    row += "<td data-int='1' data-col='total_qty'>0</td>";
-    row += "<td data-int='1' data-col='amount_per_unit'>0</td>";
-    row += "<td data-int='1' data-col='total_amount'>0</td>";
-    row += "<td contenteditable data-col='remarks' class='text-start'></td>";
+    row += "<td data-col='delivered_date'>";
+    row += "    <input class='form-control' type='date' name='delivered_date'/>";
+    row += "</td>";
+    row += "<td contenteditable data-required='1' data-col='dr_number'></td>";
+    row += "<td contenteditable data-col='supplier'></td>";
     row += "</tr>";
 
     $("#table_form").append(row);
@@ -207,13 +188,10 @@ $("button[name=add]").click(() => {
     var is_ready = true;
     const purchase_num = $("input[name=purchase_req_num]").val();
     var data_item = new Array();
-    var data_qty_per_unit = new Array();
-    var data_unit_per_batch = new Array();
+    var data_qty = new Array();
     var data_uom = new Array();
     var data_unitcost = new Array();
-    var data_total_qty = new Array();
-    var data_amount_per_unit = new Array();
-    var data_total_amount = new Array();
+    var data_amount = new Array();
     var data_remarks = new Array();
     const phase = $("input[name=phase]").val();
     const block = $("input[name=block]").val();
@@ -244,23 +222,14 @@ $("button[name=add]").click(() => {
                         case "item":
                             data_item.push($(cell).text());
                             break;
-                        case "qty_per_unit":
-                            data_qty_per_unit.push($(cell).text());
-                            break;
-                        case "unit_per_batch":
-                            data_unit_per_batch.push($(cell).text());
+                        case "qty":
+                            data_qty.push($(cell).text());
                             break;
                         case "unitcost":
                             data_unitcost.push($(cell).text());
                             break;
-                        case "total_qty":
-                            data_total_qty.push($(cell).text());
-                            break;
-                        case "amount_per_unit":
-                            data_amount_per_unit.push($(cell).text());
-                            break;
-                        case "total_amount":
-                            data_total_amount.push($(cell).text());
+                        case "amount":
+                            data_amount.push($(cell).text());
                             break;
                         case "remarks":
                             data_remarks.push($(cell).text());
@@ -307,13 +276,10 @@ $("button[name=add]").click(() => {
     console.log(is_ready);
     console.log(purchase_num);
     console.log(data_item);
-    console.log(data_qty_per_unit);
+    console.log(data_qty);
     console.log(data_uom);
-    console.log(data_unit_per_batch);
     console.log(data_unitcost);
-    console.log(data_total_qty);
-    console.log(data_amount_per_unit);
-    console.log(data_total_amount);
+    console.log(data_amount);
     console.log(data_remarks);
     console.log(phase);
     console.log(block);
@@ -322,13 +288,10 @@ $("button[name=add]").click(() => {
 
     if (is_ready) {
         var json_item = JSON.stringify(data_item);
-        var json_qty_per_unit = JSON.stringify(data_qty_per_unit);
+        var json_qty = JSON.stringify(data_qty);
         var json_uom = JSON.stringify(data_uom);
-        var json_unit_per_batch = JSON.stringify(data_unit_per_batch);
         var json_unitcost = JSON.stringify(data_unitcost);
-        var json_total_qty = JSON.stringify(data_total_qty);
-        var json_amount_per_unit = JSON.stringify(data_amount_per_unit);
-        var json_total_amount = JSON.stringify(data_total_amount);
+        var json_amount = JSON.stringify(data_amount);
         var json_remarks = JSON.stringify(data_remarks);
 
         $.post(
@@ -337,18 +300,15 @@ $("button[name=add]").click(() => {
                 requestType: "Add_Purchase_Request",
                 data_purchase_num: purchase_num,
                 data_item: json_item,
-                data_qty_per_unit: json_qty_per_unit,
+                data_qty: json_qty,
                 data_uom: json_uom,
-                data_unit_per_batch: json_unit_per_batch,
                 data_unitcost: json_unitcost,
-                data_total_qty: json_total_qty,
-                data_amount_per_unit: json_amount_per_unit,
-                data_total_amount: json_total_amount,
+                data_amount: json_amount,
                 data_remarks: json_remarks,
                 data_phase: phase,
                 data_block: block,
                 data_lot: lot,
-                data_status: status,
+                data_status: status
             },
             function (data, status) {
                 var table = $("#table_main").DataTable();
@@ -395,18 +355,15 @@ $("#table_main tbody").on("click", "tr", function () {
 
     $("input[name=pr_num]").val(_rowdata.pr_number);
     $("#table_details td[data-col=item]").text(_rowdata.item);
-    $("#table_details td[data-col=qty_per_unit]").text(_rowdata.qty_per_unit);
+    $("#table_details td[data-col=qty]").text(_rowdata.qty);
     $("#table_details td[data-col=uom]").text(_rowdata.uom);
-    $("#table_details td[data-col=unit_per_batch]").text(_rowdata.unit_per_batch);
     $("#table_details td[data-col=unitcost]").text(_rowdata.unitcost);
-    $("#table_details td[data-col=total_qty]").text(_rowdata.total_qty);
-    $("#table_details td[data-col=amount_per_unit]").text(_rowdata.amount_per_unit);
-    $("#table_details td[data-col=total_amount]").text(_rowdata.total_amount);
+    $("#table_details td[data-col=amount]").text(_rowdata.amount);
     $("#table_details td[data-col=remarks]").text(_rowdata.remarks);
+    $("#table_details td[data-col=status]").text(_rowdata.status);
     $("input[name=details_phase]").val(_rowdata.phase);
     $("input[name=details_block]").val(_rowdata.block);
     $("input[name=details_lot]").val(_rowdata.lot);
-    $("select[name=details_status] option:selected").text(_rowdata.status);
 
     $("#modalViewDetails").modal("show");
 });
@@ -458,20 +415,27 @@ $("button[name=modify]").click(() => {
         <option>ltrs</option>
     </select>`;
 
+    var status_dropdown = `<select class="form-select border-0">
+        <option>Pending</option>
+        <option>Processing</option>
+        <option>Released</option>
+        <option>Denied</option>
+    </select>`;
+
     $("#table_details td[data-col=uom]").text("").append(uom_dropdown);
+    $("#table_details td[data-col=status]").text("").append(status_dropdown);
+
     $("#table_details td[data-col=uom] select").val(_rowdata.uom);
+    $("#table_details td[data-col=status] select").val(_rowdata.status);
 
     $("input[name=pr_num]").prop("disabled", false);
     $("#table_details td[data-col=item]").prop("contenteditable", true);
-    $("#table_details td[data-col=qty_per_unit]").prop("contenteditable", true);
-    $("#table_details td[data-col=unit_per_batch]").prop("contenteditable", true);
+    $("#table_details td[data-col=qty]").prop("contenteditable", true);
     $("#table_details td[data-col=unitcost]").prop("contenteditable", true);
     $("#table_details td[data-col=remarks]").prop("contenteditable", true);
     $("input[name=details_phase]").prop("disabled", false);
     $("input[name=details_block]").prop("disabled", false);
     $("input[name=details_lot]").prop("disabled", false);
-    $("select[name=details_status]").prop("disabled", false);
-
 });
 
 // Discard Changes on Selected Item
@@ -487,57 +451,46 @@ $("button[name=discard]").click(() => {
 
     $("input[name=pr_num]").prop("disabled", true);
     $("#table_details td[data-col=item]").removeAttr("contenteditable");
-    $("#table_details td[data-col=qty_per_unit]").removeAttr("contenteditable");
-    $("#table_details td[data-col=unit_per_batch]").removeAttr("contenteditable");
+    $("#table_details td[data-col=qty]").removeAttr("contenteditable");
     $("#table_details td[data-col=unitcost]").removeAttr("contenteditable");
     $("#table_details td[data-col=remarks]").removeAttr("contenteditable");
     $("input[name=details_phase]").prop("disabled", true);
     $("input[name=details_block]").prop("disabled", true);
     $("input[name=details_lot]").prop("disabled", true);
-    $("select[name=details_status]").prop("disabled", true);
 
     $("input[name=pr_num]").val(_rowdata.pr_number);
     $("#table_details td[data-col=item]").text(_rowdata.item);
-    $("#table_details td[data-col=qty_per_unit]").text(_rowdata.qty_per_unit);
+    $("#table_details td[data-col=qty]").text(_rowdata.quantity);
     $("#table_details td[data-col=uom]").text(_rowdata.uom);
-    $("#table_details td[data-col=unit_per_batch]").text(_rowdata.unit_per_batch);
     $("#table_details td[data-col=unitcost]").text(_rowdata.unitcost);
-    $("#table_details td[data-col=total_qty]").text(_rowdata.total_qty);
-    $("#table_details td[data-col=amount_per_unit]").text(_rowdata.amount_per_unit);
-    $("#table_details td[data-col=total_amount]").text(_rowdata.total_amount);
+    $("#table_details td[data-col=amount]").text(_rowdata.amount);
     $("#table_details td[data-col=remarks]").text(_rowdata.remarks);
+    $("#table_details td[data-col=status]").text(_rowdata.status);
     $("input[name=details_phase]").val(_rowdata.phase);
     $("input[name=details_block]").val(_rowdata.block);
     $("input[name=details_lot]").val(_rowdata.lot);
-    $("select[name=details_status] option:selected").text(_rowdata.status);
 });
 
 // Save Modified Changes on Selected Item
 $("button[name=saveChanges]").click(() => {
     var input_pr_num = $("input[name=pr_num]").val();
     var input_item = $("#table_details td[data-col=item]").text();
-    var input_qty_per_unit = $("#table_details td[data-col=qty_per_unit]").text();
+    var input_qty = $("#table_details td[data-col=qty]").text();
     var input_uom = $("#table_details td[data-col=uom] select").val();
-    var input_unit_per_batch = $("#table_details td[data-col=unit_per_batch]").text();
     var input_unitcost = $("#table_details td[data-col=unitcost]").text();
-    var input_total_qty = $("#table_details td[data-col=total_qty]").text();
-    var input_amount_per_unit = $("#table_details td[data-col=amount_per_unit]").text();
-    var input_total_amount = $("#table_details td[data-col=total_amount]").text();
+    var input_amount = $("#table_details td[data-col=amount]").text();
     var input_remarks = $("#table_details td[data-col=remarks]").text();
-    var input_status = $("select[name=details_status]").val();
+    var input_status = $("#table_details td[data-col=status] select").val();
     var input_phase = $("input[name=details_phase]").val();
     var input_block = $("input[name=details_block]").val();
     var input_lot = $("input[name=details_lot]").val();
 
     // console.log("pr_num: "+input_pr_num);
     // console.log("item: "+input_item);
-    // console.log("qty: "+input_qty_per_unit);
+    // console.log("qty: "+input_qty);
     // console.log("uom: "+input_uom);
-    // console.log("unit_per_batch: "+input_unit_per_batch);
     // console.log("unitcost: "+input_unitcost);
-    // console.log("total_qty: "+input_total_qty);
-    // console.log("amount_per_unit: "+input_amount_per_unit);
-    // console.log("total_amount: "+input_total_amount);
+    // console.log("amount: "+input_amount);
     // console.log("remarks: "+input_remarks);
     // console.log("status: "+input_status);
     // console.log("phase: "+input_phase);
@@ -558,18 +511,15 @@ $("button[name=saveChanges]").click(() => {
             data_id: _selected_item_id,
             data_pr_num: input_pr_num,
             data_item: input_item,
-            data_qty_per_unit: input_qty_per_unit,
+            data_qty: input_qty,
             data_uom: input_uom,
-            data_unit_per_batch: input_unit_per_batch,
             data_unitcost: input_unitcost,
-            data_total_qty: input_total_qty,
-            data_amount_per_unit: input_amount_per_unit,
-            data_total_amount: input_total_amount,
+            data_amount: input_amount,
             data_remarks: input_remarks,
+            data_status: input_status,
             data_phase: input_phase,
             data_block: input_block,
             data_lot: input_lot,
-            data_status: input_status
         },
         function (data) {
             console.log(data);

@@ -38,9 +38,8 @@ if ($result->num_rows > 0) {
             "uom" => $row['unit_of_measurement'],
             "stock_level" => $level,
             "unitcost" => $row['unit_cost'],
-            "brand" => $row['brand'],
             "remarks" => $row['remarks'],
-            "highest_stock" => $row['highest_stock'],
+            "highest_stock" => $row['highest_stock']." ".$row['unit_of_measurement'],
             "percentage_level" => $percent
         );
     }

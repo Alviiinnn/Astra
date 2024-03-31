@@ -23,6 +23,7 @@ $(document).ready(function () {
             { data: "item" },
             { data: "category" },
             { data: "stock_qty" },
+            { data: "highest_stock" },
             { data: "percentage_level" },
             { data: "stock_level" }
         ],
@@ -105,7 +106,7 @@ $(document).ready(function () {
     });
 
 
-    $.get("./includes/get_purchase_request.php").done(function (data) {
+        $.get("./includes/get_purchase_request.php").done(function (data) {
         // _data = data;
         console.log(data);
         // for (var i of data) {
@@ -151,8 +152,8 @@ $("button[name=addRow]").click(() => {
     var ctr = $("#table_form tr").length;
     var row = "<tr>";
     row += `<td>${ctr}</td>`;
-    row += "<td contenteditable data-required='1' data-col='item'></td>";
-    row += "<td contenteditable data-dropdown='1' data-col='category'>";
+    row += "<td contenteditable data-required='1' data-col='item' class='text-start'></td>";
+    row += "<td data-dropdown='1' data-col='category'>";
     row += "    <select class='form-select border-0'>";
     row += "        <option>Electrical</option>";
     row += "        <option>Masonry</option>";
@@ -161,21 +162,19 @@ $("button[name=addRow]").click(() => {
     row += "    </select>";
     row += "</td>";
     row += "<td contenteditable data-int='1' data-col='qty'>0</td>";
-    row += "<td contenteditable data-dropdown='1' data-col='uom'>";
+    row += "<td data-dropdown='1' data-col='uom'>";
     row += "    <select class='form-select border-0'>";
-    row += "        <option>pieces</option>";
+    row += "        <option>pcs</option>";
     row += "        <option>bags</option>";
+    row += "        <option>kl</option>";
+    row += "        <option>box</option>";
+    row += "        <option>gal</option>";
+    row += "        <option>tin</option>";
+    row += "        <option>ltrs</option>";
     row += "    </select>";
     row += "</td>";
     row += "<td contenteditable data-int='1' data-col='unitcost'>0</td>";
-    row += "<td contenteditable data-dropdown='1' data-col='brand'>";
-    row += "    <select class='form-select border-0'>";
-    row += "        <option>Brand X</option>";
-    row += "        <option>Brand Y</option>";
-    row += "        <option>Brand Z</option>";
-    row += "    </select>";
-    row += "</td>";
-    row += "<td contenteditable data-col='remarks'></td>";
+    row += "<td contenteditable data-col='remarks' class='text-start'></td>";
     row += "</tr>";
 
     $("#table_form").append(row);
@@ -205,7 +204,6 @@ $("button[name=add]").click(() => {
     var data_uom = new Array();
     var data_qty = new Array();
     var data_unitcost = new Array();
-    var data_brand = new Array();
     var data_remarks = new Array();
 
     //Consolidate Table Data
@@ -240,9 +238,6 @@ $("button[name=add]").click(() => {
                                 break;
                             case "uom":
                                 data_uom.push($(cell).find("select").val());
-                                break;
-                            case "brand":
-                                data_brand.push($(cell).find("select").val());
                                 break;
                             default:
                                 break;
@@ -280,7 +275,6 @@ $("button[name=add]").click(() => {
     // console.log(data_uom);
     // console.log(data_qty);
     // console.log(data_unitcost);
-    // console.log(data_brand);
     // console.log(data_remarks);
 
     if (is_ready) {
@@ -289,7 +283,6 @@ $("button[name=add]").click(() => {
         var json_uom = JSON.stringify(data_uom);
         var json_qty = JSON.stringify(data_qty);
         var json_unitcost = JSON.stringify(data_unitcost);
-        var json_brand = JSON.stringify(data_brand);
         var json_remarks = JSON.stringify(data_remarks);
 
         $.post(
@@ -301,7 +294,6 @@ $("button[name=add]").click(() => {
                 data_uom: json_uom,
                 data_qty: json_qty,
                 data_unitcost: json_unitcost,
-                data_brand: json_brand,
                 data_remarks: json_remarks,
             },
             function (data, status) {
@@ -344,7 +336,6 @@ $("#table_main tbody").on("click", "tr", function () {
     $("#table_details td[data-col=qty]").text(_rowdata.quantity);
     $("#table_details td[data-col=uom]").text(_rowdata.uom);
     $("#table_details td[data-col=unitcost]").text(_rowdata.unitcost);
-    $("#table_details td[data-col=brand]").text(_rowdata.brand);
     $("#table_details td[data-col=remarks]").text(_rowdata.remarks);
 
     $("#table_details td[data-col=item]").removeAttr("contenteditable");
@@ -406,14 +397,13 @@ $("button[name=modify]").click(() => {
     </select>`;
 
     var uom_dropdown = `<select class="form-select">
-        <option>pieces</option>
+        <option>pcs</option>
         <option>bags</option>
-    </select>`;
-
-    var brand_dropdown = `<select class="form-select">
-        <option>Brand X</option>
-        <option>Brand Y</option>
-        <option>Brand Z</option>
+        <option>kl</option>
+        <option>box</option>
+        <option>gal</option>
+        <option>tin</option>
+        <option>ltrs</option>
     </select>`;
 
     $("#table_details td[data-col=category]")
@@ -422,17 +412,12 @@ $("button[name=modify]").click(() => {
     $("#table_details td[data-col=uom]")
         .text("")
         .append(uom_dropdown);
-    $("#table_details td[data-col=brand]")
-        .text("")
-        .append(brand_dropdown);
     
     $("#table_details td[data-col=category] select").val(_rowdata.category);
     $("#table_details td[data-col=uom] select").val(_rowdata.uom);
-    $("#table_details td[data-col=brand] select").val(_rowdata.brand);
 
     $("#table_details td[data-col=item]").prop("contenteditable", true);
     $("#table_details td[data-col=qty]").prop("contenteditable", true);
-    $("#table_details td[data-col=uom]").prop("contenteditable", true);
     $("#table_details td[data-col=unitcost]").prop("contenteditable", true);
     $("#table_details td[data-col=remarks]").prop("contenteditable", true);
 });
@@ -448,15 +433,11 @@ $("button[name=discard]").click(() => {
 
     $("#table_details td[data-col=category] select").remove();
     $("#table_details td[data-col=uom] select").remove();
-    $("#table_details td[data-col=brand] select").remove();
 
     $("#table_details td[data-col=category]").removeAttr("contenteditable");
-    $("#table_details td[data-col=uom]").removeAttr("contenteditable");
-    $("#table_details td[data-col=brand]").removeAttr("contenteditable");
 
     $("#table_details td[data-col=item]").removeAttr("contenteditable");
     $("#table_details td[data-col=qty]").removeAttr("contenteditable");
-    $("#table_details td[data-col=uom]").removeAttr("contenteditable");
     $("#table_details td[data-col=unitcost]").removeAttr("contenteditable");
     $("#table_details td[data-col=remarks]").removeAttr("contenteditable");
 
@@ -465,7 +446,6 @@ $("button[name=discard]").click(() => {
     $("#table_details td[data-col=qty]").text(_rowdata.quantity);
     $("#table_details td[data-col=uom]").text(_rowdata.uom);
     $("#table_details td[data-col=unitcost]").text(_rowdata.unitcost);
-    $("#table_details td[data-col=brand]").text(_rowdata.brand);
     $("#table_details td[data-col=remarks]").text(_rowdata.remarks);
 });
 
@@ -480,14 +460,12 @@ $("button[name=saveChanges]").click(()=>{
     var input_remarks = $("#table_details td[data-col=remarks]").text();
     var input_category = $("#table_details td[data-col=category] select").val();
     var input_uom = $("#table_details td[data-col=uom] select").val();
-    var input_brand = $("#table_details td[data-col=brand] select").val();
 
     // console.log(input_item);
     // console.log(input_category);
     // console.log(input_qty);
     // console.log(input_uom);
     // console.log(input_unitcost);
-    // console.log(input_brand);
     // console.log(input_remarks);
 
     $("#modalViewDetails").modal("hide");
@@ -505,8 +483,7 @@ $("button[name=saveChanges]").click(()=>{
             data_unitcost: input_unitcost,
             data_remarks: input_remarks,
             data_category: input_category,
-            data_uom: input_uom,
-            data_brand: input_brand
+            data_uom: input_uom
         },
         function (data) {
             console.log(data);
