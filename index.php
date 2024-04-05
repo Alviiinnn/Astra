@@ -29,7 +29,7 @@ if (isset($_SESSION['username'])) {
             <div class="col c-bg-darkgreen slant-div">
                 <div class="row justify-content-center" style="margin-top: 15rem;">
                     <div class="col-md-6 mt-5">
-                        <h1 class="text-start text-white c-font-login mb-5">Inventory<br>Management <br>System.</h1>
+                        <h1 class="text-start text-white c-font-login mb-5">Inventory<br>Management <br>System</h1>
 
                         <form id="login" method="POST" action="">
                             <div class="mb-3">
