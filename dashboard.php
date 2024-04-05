@@ -35,7 +35,6 @@ if (!isset($_SESSION['username'])) {
 
                 <ul class="nav nav-pills align-items-center">
                     <li class="nav-item px-2"><a href="dashboard.php" class="nav-link c-darkgreen c-bold" aria-current="page">Dashboard</a></li>
-                    <li class="nav-item px-2"><a href="inventory.php" class="nav-link c-darkgreen">Inventory</a></li>
                     <li class="nav-item px-2 dropdown">
                         <a class="nav-link c-darkgreen dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Requests
@@ -46,7 +45,16 @@ if (!isset($_SESSION['username'])) {
                         </ul>
                     </li>
                     <li class="nav-item px-2"><a href="delivery.php" class="nav-link c-darkgreen">Delivery</a></li>
-
+                    <li class="nav-item px-2"><a href="inventory.php" class="nav-link c-darkgreen">Inventory</a></li>
+                    <li class="nav-item px-2 dropdown">
+                        <a class="nav-link c-darkgreen dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Users
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="user-access.php">User Access</a></li>
+                            <li><a class="dropdown-item" href="user-management.php">User Management</a></li>
+                        </ul>
+                    </li>
                     <!-- <i class="bi bi-box-arrow-right"></i> -->
                     <li class="nav-item px-2" name="logout">
                         <a href="index.php" class="nav-link c-darkgreen">

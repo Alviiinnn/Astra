@@ -43,4 +43,30 @@ if ($request_type == "Material_Request") {
 }
 
 
+if ($request_type == "Delivery") {
+    $id = mysqli_escape_string($conn, $_POST['data_id']);
+
+    $sql = "DELETE from delivery_tbl WHERE delivery_id = '$id' ";
+
+    if ($conn->query($sql) === TRUE) {
+        echo "Delete Success!"; //DO NOT REMOVE THE WORD 'SUCCESS' | Reference: inventory.js
+    } else {
+        echo "Error " . $sql . "<br>" . $conn->error;
+    }
+}
+
+
+if ($request_type == "Delivery") {
+    $id = mysqli_escape_string($conn, $_POST['data_id']);
+
+    $sql = "DELETE from delivery_tbl WHERE delivery_id = '$id' ";
+
+    if ($conn->query($sql) === TRUE) {
+        echo "Delete Success!"; //DO NOT REMOVE THE WORD 'SUCCESS' | Reference: inventory.js
+    } else {
+        echo "Error " . $sql . "<br>" . $conn->error;
+    }
+}
+
+
 $conn->close();

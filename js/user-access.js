@@ -21,12 +21,8 @@ $(document).ready(function () {
             { data: "qty_per_unit" },
             { data: "uom" },
             { data: "unit_per_batch" },
-            { data: "unitcost" },
-            { data: "total_qty" },
-            { data: "phase" },
-            { data: "block" },
-            { data: "lot" },
-            { data: "status" },
+            { data: "unit_per_batch" },
+            { data: "unit_per_batch" },
         ],
         columnDefs: [
             // { targets: [11], searchable: true }, //Column 11 = Status
@@ -41,11 +37,13 @@ $(document).ready(function () {
                 api.search(filterValue).draw();
             });
         },
-        layout: {
-            bottom2End: {
-                buttons: ["copy", "csv", "excel", "pdf", "print"],
-            },
-        },
+        // layout: {
+        //     bottom2End: {
+        //         buttons: ["copy", "csv", "excel", "pdf", "print"],
+        //     },
+        // },
+        paging: false,
+        info: false
 
         // initComplete: function () {
         //     this.api()
@@ -313,21 +311,21 @@ $("button[name=add]").click(() => {
     });
 
     // FOR TESTING
-    // console.log(is_ready);
-    // console.log(purchase_num);
-    // console.log(data_item);
-    // console.log(data_qty_per_unit);
-    // console.log(data_uom);
-    // console.log(data_unit_per_batch);
-    // console.log(data_unitcost);
-    // console.log(data_total_qty);
-    // console.log(data_amount_per_unit);
-    // console.log(data_total_amount);
-    // console.log(data_remarks);
-    // console.log(phase);
-    // console.log(block);
-    // console.log(lot);
-    // console.log(status);
+    console.log(is_ready);
+    console.log(purchase_num);
+    console.log(data_item);
+    console.log(data_qty_per_unit);
+    console.log(data_uom);
+    console.log(data_unit_per_batch);
+    console.log(data_unitcost);
+    console.log(data_total_qty);
+    console.log(data_amount_per_unit);
+    console.log(data_total_amount);
+    console.log(data_remarks);
+    console.log(phase);
+    console.log(block);
+    console.log(lot);
+    console.log(status);
 
     if (is_ready) {
         var json_item = JSON.stringify(data_item);
@@ -389,7 +387,6 @@ $("#table_main tbody").on("click", "tr", function () {
     $("input[name=details_phase]").prop("disabled", true);
     $("input[name=details_block]").prop("disabled", true);
     $("input[name=details_lot]").prop("disabled", true);
-    $("select[name=details_status]").prop("disabled", true);
 
     var table = $("#table_main").DataTable();
 
@@ -416,9 +413,9 @@ $("#table_main tbody").on("click", "tr", function () {
     $("input[name=details_phase]").val(_rowdata.phase);
     $("input[name=details_block]").val(_rowdata.block);
     $("input[name=details_lot]").val(_rowdata.lot);
-    $("select[name=details_status]").val(_rowdata.status);
+    $("select[name=details_status] option:selected").text(_rowdata.status);
 
-    $("#modalViewDetails").modal("show");
+    $("#modalModifyAccess").modal("show");
 });
 
 // Delete Selected Item
@@ -428,7 +425,7 @@ $("button[name=delete]").click(() => {
 
     $("button[name=delete_confirm]").click(() => {
         toast_delete.hide();
-        $("#modalViewDetails").modal("hide");
+        $("#modalModifyAccess").modal("hide");
         $("div[name=toast_success_msg]").html(
             `<b>${_selected_item}</b> deleted successfully!`
         );
@@ -554,7 +551,7 @@ $("button[name=saveChanges]").click(() => {
     // console.log("block: "+input_block);
     // console.log("lot: "+input_lot);
 
-    $("#modalViewDetails").modal("hide");
+    $("#modalModifyAccess").modal("hide");
     $("div[name=toast_success_msg]").html(
         `<b>${_selected_item}</b> updated successfully!`
     );

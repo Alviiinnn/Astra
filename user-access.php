@@ -13,7 +13,7 @@ if (!isset($_SESSION['username'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Delivery</title>
+    <title>User Access</title>
     <link href="libraries/bootstrap.min.css" rel="stylesheet">
     <link href="css/custom.css" rel="stylesheet">
     <script src="libraries/bootstrap.bundle.min.js"></script>
@@ -54,9 +54,9 @@ if (!isset($_SESSION['username'])) {
                             <li><a class="dropdown-item" href="material-requests.php">Withdrawal Requests</a></li>
                         </ul>
                     </li>
-                    <li class="nav-item px-2"><a href="delivery.php" class="nav-link c-darkgreen c-bold">Delivery</a></li>
+                    <li class="nav-item px-2"><a href="delivery.php" class="nav-link c-darkgreen">Delivery</a></li>
                     <li class="nav-item px-2"><a href="inventory.php" class="nav-link c-darkgreen">Inventory</a></li>
-                    <li class="nav-item px-2 dropdown">
+                    <li class="nav-item px-2 dropdown c-bold">
                         <a class="nav-link c-darkgreen dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Users
                         </a>
@@ -81,15 +81,15 @@ if (!isset($_SESSION['username'])) {
     </div>
 
     <div class="container">
-        <h5 class="text-center mb-4">Received Items</h5>
+        <h5 class="text-center mb-4">User Access</h5>
         <hr>
     </div>
 
-    <div class="container c-bg-khaki">
-        <div class="row">
-            <button id="addRequest" class="btn btn-success w-10" data-bs-toggle="modal" data-bs-target="#modalAddDelivery">Add Delivery</button>
+    <div class="container c-bg-khaki pt-1">
+        <!-- <div class="row">
+            <button id="addRequest" class="btn btn-success col-lg-2" data-bs-toggle="modal" data-bs-target="#modalAddRequest">Add Request</button>
 
-            <!-- <div class="col-lg-2">
+            <div class="col-lg-2">
                 <select id="statusFilter" class="form-select c-float-right" style="width: 10em;">
                     <option value="0" selected disabled>- Status Filter -</option>
                     <option value="pending">Pending</option>
@@ -97,21 +97,20 @@ if (!isset($_SESSION['username'])) {
                     <option value="released">Released</option>
                     <option value="denied">Denied</option>
                 </select>
-            </div> -->
-        </div>
+            </div>
+        </div> -->
 
-        <table id="table_main" class="table table-hover table-searchable">
-            <thead>
+        <table id="table_main" class="table table-hover table-searchable cell-border">
+            <thead class="">
                 <tr>
                     <th scope="col">#</th>
-                    <th scope="col">PR Number</th>
-                    <th scope="col">Item</th>
-                    <th scope="col">Quantity</th>
-                    <th scope="col">UOM</th>
-                    <th scope="col">Date of Delivery</th>
-                    <th scope="col">DR Number</th>
-                    <th scope="col">Supplier</th>
-                    <th scope="col">Status</th>
+                    <th scope="col">Username</th>
+                    <th scope="col">Inventory</th>
+                    <th scope="col">Purchase Request</th>
+                    <th scope="col">Withdrawal Request</th>
+                    <th scope="col">Delivery</th>
+                    <th scope="col">User Access</th>
+                    <th scope="col">User Management</th>
                 </tr>
             </thead>
             <tbody></tbody>
@@ -139,138 +138,140 @@ if (!isset($_SESSION['username'])) {
 
     <!-- MODALS -->
 
-    <div class="modal fade" id="modalAddDelivery" tabindex="-1" aria-labelledby="modalAddDeliveryLabel" aria-hidden="true" data-bs-backdrop="static">
-        <div class="modal-dialog modal-dialog-centered " style="max-width: 80em;">
+    <div class="modal fade" id="modalModifyAccess" tabindex="-1" aria-labelledby="modalModifyAccessLabel" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered " style="max-width: 50em;">
             <div class="modal-content">
                 <div class="modal-header justify-content-center c-bg-yellow">
-                    <h1 class="modal-title fs-5 text-center" id="modalAddDeliveryLabel">Add New Delivery</h1>
+                    <h1 class="modal-title fs-5 text-center" id="modalModifyAccessLabel">Modify Access</h1>
                     <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
                 </div>
-                <div class="modal-body container p-5">
+                <div class="modal-body container p-4 pb-3">
                     <div class="container" role="child">
-                        <div class="row">
-                            <table id="table_form" class="table table-bordered table-responsive text-center align-middle">
+                        <div class="row align-items-center justify-content-end">
+                            <label class="col-lg-3 text-end">Request Slip No:</label>
+                            <div class="col-lg-3">
+                                <input name="details_req_slip_num" class="form-control" data-required="1" type="text" />
+                            </div>
+                        </div>
+                        <div class="row justify-content-end mb-2">
+                            <span class="col-lg-3 small text-danger d-none" name="request_slip_num_warning">This is a
+                                required field!</span>
+                        </div>
+
+                        <div class="row m-0">
+                            <table id="table_details" class="table table-bordered mb-2 align-middle">
                                 <thead class="table-light">
-                                    <th style="width: 3em;">#</th>
-                                    <th class="text-start" style="width: 20em;">Item</th>
-                                    <th style="width: 5em;">Qty</th>
-                                    <th style="width: 6em;">UOM</th>
-                                    <th style="width: 8em;">Date of Delivery</th>
-                                    <th style="width: 8em;">DR Number</th>
-                                    <th style="width: 8em;">Supplier</th>
-                                    <th style="width: 8em;">Status</th>
+                                    <tr>
+                                        <!-- <th scope="col">#</th> -->
+                                        <th scope="col" style="width: 30em;">Requested Items</th>
+                                        <th scope="col">Quantity</th>
+                                        <th scope="col">UOM</th>
+                                    </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td>1</td>
-                                        <td class="text-start" contenteditable data-required="1" data-dropdown="1" data-col="item">
-                                            <!-- <input class="form-control border-0" list="datalist_item1" placeholder="Type to search items...">
-                                            <datalist id="datalist_item1"></datalist> -->
-                                            <select name="itemlist" class="form-select border-0"></select>
-                                        </td>
-                                        <td contenteditable data-int="1" data-col="qty" data-required="1"></td>
-                                        <td data-dropdown="1" data-col="uom">
-                                            <select class="form-select border-0">
-                                                <option>pcs</option>
-                                                <option>bags</option>
-                                                <option>kl</option>
-                                                <option>box</option>
-                                                <option>gal</option>
-                                                <option>tin</option>
-                                                <option>ltrs</option>
+                                        <!-- <td>1</td> -->
+                                        <td data-dropdown="1" data-col="item" data-required="1">
+                                            <select name="details_itemlist" class="form-select border-0" data-required="1">
+                                                <option value="0" selected disabled>- Select an Item -</option>
                                             </select>
                                         </td>
-                                        <td data-col="delivered_date" data-required="1">
-                                            <input class="form-control border-0" type="date" name="delivered_date" />
-                                        </td>
-                                        <td contenteditable data-required="1" data-col="dr_number"></td>
-                                        <td contenteditable data-col="supplier"></td>
-                                        <td data-col="status" data-dropdown="1">
-                                            <select class="form-select border-0">
-                                                <option>Pending</option>
-                                                <option>In Transit</option>
-                                                <option>Received</option>
-                                                <option>Returned</option>
-                                                <option>Cancelled</option>
-                                            </select>
-                                        </td>
+                                        <td contenteditable data-required="1" data-col="qty" data-int="1">0</td>
+                                        <td data-col="uom"></td>
                                     </tr>
                                 </tbody>
                             </table>
-                            <div name="warning_general" class="text-danger text-center small d-none"><b>Please complete the required fields!</b></div>
-                            <span name="warning_item" class="text-danger text-center small d-none"><b>ITEM</b> is a
-                                required field!</span>
                             <span name="warning_numbers" class="text-danger text-center small d-none"><b>Qty</b>,
-                                <b>Unit</b>, <b>Cost</b>, and <b>Amount</b> accepts NUMBERS ONLY!</span>
-                            <button name="removeRow" class="btn btn-outline-secondary col-lg-1" disabled>-</button>
-                            <button name="addRow" class="btn btn-outline-secondary col-lg-1">+</button>
+                                and <b>Unit Cost</b>, accepts NUMBERS ONLY!</span>
+                            <!-- <div class="row justify-content-end mb-2 mx-0">
+                                <button name="removeRow" class="btn btn-outline-secondary col-lg-1" disabled>-</button>
+                                <button name="addRow" class="btn btn-outline-secondary col-lg-1">+</button>
+                            </div> -->
                         </div>
 
-                    </div>
+                        <div class="row align-items-center mb-2">
+                            <label class="col-lg-2">Remarks:</label>
+                            <div class="col-lg-10">
+                                <input class="form-control" type="text" name="details_remarks" />
+                            </div>
+                        </div>
 
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button name="add" type="button" class="btn btn-warning">Add</button>
-                </div>
-            </div>
-        </div>
-    </div>
+                        <div class="row align-items-center mb-2">
+                            <label class="col-lg-2">UNIT:</label>
+                            <div class="col-lg-10 d-flex justify-content-between">
+                                <div class="form-floating">
+                                    <input name="details_phase" type="text" class="form-control" id="details_phase" data-required="1" placeholder="">
+                                    <label for="phase">Phase</label>
+                                </div>
+                                <div class="form-floating ms-1">
+                                    <input name="details_block" type="text" class="form-control" id="details_block" data-required="1" placeholder="">
+                                    <label for="block">Block</label>
+                                </div>
+                                <div class="form-floating ms-1">
+                                    <input name="details_lot" type="text" class="form-control" id="details_lot" data-required="1" placeholder="">
+                                    <label for="lot">Lot</label>
+                                </div>
+                            </div>
+                        </div>
 
 
-    <div class="modal fade" id="modalViewDetails" tabindex="-1" aria-labelledby="modalViewDetailsLabel" aria-hidden="true" data-bs-backdrop="static">
-        <div class="modal-dialog modal-dialog-centered " style="max-width: 80em;">
-            <div class="modal-content">
-                <div class="modal-header justify-content-center c-bg-yellow">
-                    <h1 class="modal-title fs-5 text-center" id="modalViewDetailsLabel">Delivery Details</h1>
-                    <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
-                </div>
-                <div class="modal-body container p-5">
-                    <div class="container" role="child">
-                        <!-- <div class="row align-items-center mb-2">
-                            <label class="col-lg-3">Purchase Request No.:</label>
-                            <div class="col-lg-3">
-                                <select class="form-select" disabled>
-                                    <option value="0" selected>- Select One -</option>
-                                    <option value="0">EA41 - B9 - 001</option>
-                                    <option value="0">EA41 - B9 - 002</option>
-                                    <option value="0">EA41 - B9 - 003</option>
-                                    <option value="0">EA41 - B9 - 004</option>
-                                    <option value="0">EA41 - B9 - 005</option>
+                        <div class="row mb-2">
+                            <label class="col-lg-2">Requested by:</label>
+                            <div class="col-lg-10 justify-content-between d-flex">
+                                <div class="">
+                                    <input name="details_requested_by" class="form-control" type="text" />
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <label class="">Date:</label>
+                                    <input name="details_date_requested" class="form-control ms-2" type="date" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-2">
+                            <label class="col-lg-2">Approved by:</label>
+                            <div class="col-lg-10 justify-content-between d-flex">
+                                <div class="">
+                                    <input name="details_approved_by" class="form-control" type="text" />
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <label class="">Date:</label>
+                                    <input name="details_date_approved" class="form-control ms-2" type="date" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-2 align-items-center">
+                            <label class="col-lg-2">Intended for:</label>
+                            <div class="col-lg-8 d-flex">
+                                <input type="radio" class="btn-check" name="details_intended_for" id="details_villas" value="villas" />
+                                <label class="btn btn-outline-secondary flex-fill" for="details_villas">Villas</label>
+
+                                <input type="radio" class="btn-check" name="details_intended_for" id="details_manors" value="manors" />
+                                <label class="btn btn-outline-secondary flex-fill" for="details_manors">Manors</label>
+
+                                <input type="radio" class="btn-check" name="details_intended_for" id="details_residences" value="residences" />
+                                <label class="btn btn-outline-secondary flex-fill" for="details_residences">Residences</label>
+                            </div>
+                            <!-- <div class="col-lg-2">
+                            <input type="text" class="form-control" id="intended_others" placeholder="Others">
+                        </div> -->
+                        </div>
+
+                        <div class="row mb-2 align-items-center">
+                            <label class="col-lg-2">Status:</label>
+                            <div class="col-lg-3 justify-content-between">
+                                <select name="details_status" class="form-select" data-required="1" disabled>
+                                    <option value="0" selected disabled>- Select Status -</option>
+                                    <option value="Pending">Pending</option>
+                                    <option value="Processing">Processing</option>
+                                    <option value="Released">Released</option>
+                                    <option value="Denied">Denied</option>
                                 </select>
                             </div>
-                        </div> -->
-
-                        <div class="row">
-                            <table id="table_details" class="table table-bordered table-responsive align-middle text-center">
-                                <thead class="table-light">
-                                    <th style="width: 15em;" class="text-start">Item</th>
-                                    <th style="width: 5em;">Qty</th>
-                                    <th style="width: 6em;">UOM</th>
-                                    <th style="width: 7em;">Date of Delivery</th>
-                                    <th style="width: 7em;">DR Number</th>
-                                    <th style="width: 7em;">Supplier</th>
-                                    <th style="width: 7em;">Status</th>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td class="text-start" contenteditable data-required="1" data-col="item"></td>
-                                        <td contenteditable data-int="1" data-col="qty" data-required="1"></td>
-                                        <td data-dropdown="1" data-col="uom"></td>
-                                        <td data-col="delivered_date" data-required="1"></td>
-                                        <td contenteditable data-required="1" data-col="dr_number"></td>
-                                        <td contenteditable data-col="supplier"></td>
-                                        <td data-col="status" data-dropdown="1"></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <span name="warning_item" class="text-danger text-center small d-none"><b>ITEM</b> is a
-                                required field!</span>
-                            <span name="warning_numbers" class="text-danger text-center small d-none"><b>Qty</b>,
-                                <b>Unit</b>, <b>Cost</b>, and <b>Amount</b> accepts NUMBERS ONLY!</span>
                         </div>
-
                     </div>
+
 
                 </div>
                 <div class="modal-footer">
@@ -325,7 +326,7 @@ if (!isset($_SESSION['username'])) {
     </div>
 
 
-    <script src="js/delivery.js"></script>
+    <script src="js/user-access.js"></script>
 
 </body>
 

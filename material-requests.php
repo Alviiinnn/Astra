@@ -45,7 +45,6 @@ if (!isset($_SESSION['username'])) {
 
                 <ul class="nav nav-pills align-items-center">
                     <li class="nav-item px-2"><a href="dashboard.php" class="nav-link c-darkgreen" aria-current="page">Dashboard</a></li>
-                    <li class="nav-item px-2"><a href="inventory.php" class="nav-link c-darkgreen">Inventory</a>
                     </li>
                     <li class="nav-item px-2 dropdown c-bold">
                         <a class="nav-link c-darkgreen dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -57,7 +56,16 @@ if (!isset($_SESSION['username'])) {
                         </ul>
                     </li>
                     <li class="nav-item px-2"><a href="delivery.php" class="nav-link c-darkgreen">Delivery</a></li>
-
+                    <li class="nav-item px-2"><a href="inventory.php" class="nav-link c-darkgreen">Inventory</a>
+                    <li class="nav-item px-2 dropdown">
+                        <a class="nav-link c-darkgreen dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Users
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="user-access.php">User Access</a></li>
+                            <li><a class="dropdown-item" href="user-management.php">User Management</a></li>
+                        </ul>
+                    </li>
                     <i class="bi bi-box-arrow-right"></i>
                     <li class="nav-item px-2" name="logout">
                         <a href="index.php" class="nav-link c-darkgreen">
@@ -93,8 +101,8 @@ if (!isset($_SESSION['username'])) {
             </div>
         </div>
 
-        <table id="table_main" class="table table-hover table-searchable">
-            <thead>
+        <table id="table_main" class="table table-hover table-searchable cell-border">
+            <thead class="">
                 <tr>
                     <th scope="col">#</th>
                     <th scope="col">Request Slip No.</th>
@@ -180,6 +188,7 @@ if (!isset($_SESSION['username'])) {
                                     </tr>
                                 </tbody>
                             </table>
+                            <div name="warning_qty" class="text-danger text-center small d-none"><b>Quantity</b> input is greater than current stocks!</div>
                             <span name="warning_numbers" class="text-danger text-center small d-none"><b>Qty</b>,
                                 and <b>Unit Cost</b>, accepts NUMBERS ONLY!</span>
                             <div class="row justify-content-end mb-2 mx-0">
