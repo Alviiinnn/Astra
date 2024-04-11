@@ -58,11 +58,20 @@ if ($request_type == "Delivery") {
 
 if ($request_type == "User_Management") {
     $id = mysqli_escape_string($conn, $_POST['data_id']);
+    $username = mysqli_escape_string($conn, $_POST['data_username']);
 
     $sql = "DELETE from user_tbl WHERE user_id = '$id' ";
 
     if ($conn->query($sql) === TRUE) {
         echo "Delete Success!"; //DO NOT REMOVE THE WORD 'SUCCESS' | Reference: user-management.js
+    } else {
+        echo "Error " . $sql . "<br>" . $conn->error;
+    }
+
+    $sql_accessControl = "DELETE from user_access_tbl WHERE username = '$username' ";
+
+    if ($conn->query($sql_accessControl) === TRUE) {
+        echo "Delete Success in Access Control!"; //DO NOT REMOVE THE WORD 'SUCCESS' | Reference: user-management.js
     } else {
         echo "Error " . $sql . "<br>" . $conn->error;
     }

@@ -145,6 +145,7 @@ $("button[name=delete]").click(() => {
             {
                 requestType: "User_Management",
                 data_id: _selected_user_id,
+                data_username: _selected_user
             },
             function (data) {
                 console.log(data);
