@@ -35,24 +35,24 @@ if (!isset($_SESSION['username'])) {
 
                 <ul class="nav nav-pills align-items-center">
                     <li class="nav-item px-1"><a href="dashboard.php" class="nav-link c-darkgreen c-bold" aria-current="page">Dashboard</a></li>
-                    <li id="link_requests" class="nav-item px-1 dropdown d-none">
+                    <li id="link_requests" class="nav-item px-1 dropdown ">
                         <a class="nav-link c-darkgreen dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Requests
                         </a>
                         <ul class="dropdown-menu">
-                            <li id="link_pr" class="d-none"><a class="dropdown-item" href="purchase-requests.php">Purchase Requests</a></li>
-                            <li id="link_withdrawal" class="d-none"><a class="dropdown-item" href="material-requests.php">Withdrawal Requests</a></li>
+                            <li id="link_pr" class=""><a class="dropdown-item" href="purchase-requests.php">Purchase Requests</a></li>
+                            <li id="link_withdrawal" class=""><a class="dropdown-item" href="material-requests.php">Withdrawal Requests</a></li>
                         </ul>
                     </li>
-                    <li id="link_delivery" class="nav-item px-1 d-none"><a href="delivery.php" class="nav-link c-darkgreen">Delivery</a></li>
-                    <li id="link_inventory" class="nav-item px-1 d-none"><a href="inventory.php" class="nav-link c-darkgreen">Inventory</a></li>
-                    <li id="link_users" class="nav-item px-1 dropdown">
+                    <li id="link_delivery" class="nav-item px-1 "><a href="delivery.php" class="nav-link c-darkgreen">Delivery</a></li>
+                    <li id="link_inventory" class="nav-item px-1 "><a href="inventory.php" class="nav-link c-darkgreen">Inventory</a></li>
+                    <li id="link_users" class="nav-item px-1 dropdown ">
                         <a class="nav-link c-darkgreen dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Users
                         </a>
                         <ul class="dropdown-menu">
                             <li id="link_accessControl" class=""><a class="dropdown-item" href="access-control.php">Access Control</a></li>
-                            <li id="link_management" class="d-none"><a class="dropdown-item" href="user-management.php">User Management</a></li>
+                            <li id="link_management" class=""><a class="dropdown-item" href="user-management.php">User Management</a></li>
                         </ul>
                     </li>
                     <li class="nav-item px-1"><?php echo $_SESSION['firstname'] ." ".$_SESSION['lastname']; ?></li>

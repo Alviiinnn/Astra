@@ -304,7 +304,7 @@ if (!isset($_SESSION['username'])) {
     </div>
 
     <script src="./js/general.js"></script>
-    <script src="js/access-control.js"></script>
+    <script src="js/acs.js"></script>
 
 </body>
 
