@@ -114,5 +114,51 @@ if ($request_type == "Add_Material_Request") {
 }
 
 
+if ($request_type == "Add_Delivery") {
+    $data_item = $_POST['data_item'];
+    $data_pr = $_POST['data_pr'];
+    $data_qty = $_POST['data_qty'];
+    $data_uom = $_POST['data_uom'];
+    $data_date_of_delivery = $_POST['data_date_of_delivery'];
+    $data_DR_number = $_POST['data_DR_number'];
+    $data_supplier = $_POST['data_supplier'];
+    $data_status = $_POST['data_status'];
+
+    $item = json_decode($data_item);
+    $pr = json_decode($data_pr);
+    $qty = json_decode($data_qty);
+    $uom = json_decode($data_uom);
+    $delivered_date = json_decode($data_date_of_delivery);
+    $dr_number = json_decode($data_DR_number);
+    $supplier = json_decode($data_supplier);
+    $status = json_decode($data_status);
+
+    $user = $_SESSION['username'];
+    for ($i = 0; $i < count($item); $i++) {
+
+        $sql = "INSERT INTO delivery_tbl (item_name, pr_number, quantity, uom, date_of_delivery, delivery_receipt_num, supplier, delivery_status) 
+                VALUES ('$item[$i]', '$pr[$i]', '$qty[$i]', '$uom[$i]', '$delivered_date[$i]', '$dr_number[$i]', '$supplier[$i]', '$status[$i]')";
+
+        if ($conn->query($sql) === TRUE) {
+            echo "Insert Success!"; //DO NOT REMOVE THE WORD 'SUCCESS' | Reference: inventory.js
+        } else {
+            echo "Error " . $sql . "<br>" . $conn->error;
+        }
+
+        if($status[$i] == "Received"){
+            $sql_inventory = "INSERT INTO inventory_tbl (item_name, pr_number, stock, highest_stock, unit_of_measurement) 
+            VALUES ('$item[$i]', '$pr[$i]', '$qty[$i]', '$qty[$i]', '$uom[$i]')";
+    
+            if ($conn->query($sql_inventory) === TRUE) {
+                echo "Insert Success!"; //DO NOT REMOVE THE WORD 'SUCCESS' | Reference: inventory.js
+            } else {
+                echo "Error " . $sql . "<br>" . $conn->error;
+            }
+        }
+
+    }
+}
+
+
 
 $conn->close();

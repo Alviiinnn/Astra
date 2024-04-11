@@ -40,6 +40,7 @@ if ($result->num_rows > 0) {
             "unitcost" => $row['unit_cost'],
             "remarks" => $row['remarks'],
             "highest_stock" => $row['highest_stock']." ".$row['unit_of_measurement'],
+            "requested_stock" => $row['highest_stock'],
             "percentage_level" => $percent
         );
     }

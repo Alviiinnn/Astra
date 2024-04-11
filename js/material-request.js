@@ -51,9 +51,10 @@ $(document).ready(function () {
         },
         layout: {
             bottom2End: {
-                buttons: ['copy', 'csv', 'excel', 'pdf', 'print']
-            }
-        }
+                buttons: ["copy", "csv", "excel", "pdf", "print"],
+            },
+        },
+        // scrollX: true
 
         // initComplete: function () {
         //     this.api()
@@ -87,14 +88,7 @@ $(document).ready(function () {
             _arr_items.push(i.item);
             _arr_items_uom.push(i.uom);
             _arr_items_id.push(i.id);
-            _str_items +=
-                "<option value='" +
-                i.id +
-                "' data-uom='" +
-                i.uom +
-                "'>" +
-                i.item +
-                "</option>";
+            _str_items += `<option value="${i.id}" data-uom="${i.uom}" data-qty="${i.quantity}" >${i.item}</option>`;
         }
         $("select[name=item_list]").append(_str_items);
     });
@@ -111,6 +105,27 @@ $(document).ready(function () {
 
 $("li[name=logout]").click(() => {
     $.post("includes/logout.php");
+});
+
+// ON EVENTS
+$(document).on("keydown", "td[data-col=qty], input[name=request_slip_num], input[name=details_req_slip_num]", function (event) {
+    var key = String.fromCharCode(event.which);
+    var regex = /^\d+$/; // Regex for only digits
+
+    // Allow backspace and delete keys
+    if (event.keyCode === 8 || event.keyCode === 46 || event.keyCode === 9) {
+        return true;
+    }
+
+    if (event.keyCode > 95 && event.keyCode < 106) {
+        return true;
+    }
+
+    // Allow only digits and prevent default action for others
+    if (!regex.test(key)) {
+        event.preventDefault();
+        return false;
+    }
 });
 
 // $("#table_main").DataTable({
@@ -175,6 +190,8 @@ $("button[name=removeRow]").click(() => {
 
 $(document).on("change", "td[data-col=item] select", function () {
     var uom = $(this).find("option:selected").data("uom");
+    var qty = $(this).find("option:selected").data("qty");
+    $(this).parent().next().text(qty);
     $(this).parent().next().next().text(uom);
 });
 
@@ -184,6 +201,7 @@ $("button[name=submit]").click(() => {
     //Reset Warnings
     $("span[name=warning_item]").removeClass("d-block").addClass("d-none");
     $("span[name=warning_numbers]").removeClass("d-block").addClass("d-none");
+    $("div[name=warning_qty]").removeClass("d-block").addClass("d-none");
 
     var table = $("#table_form");
     var is_ready = true;
@@ -201,6 +219,7 @@ $("button[name=submit]").click(() => {
     const date_requested = $("input[name=date_requested]").val();
     const date_approved = $("input[name=date_approved]").val();
     var intended_for = $("input[name=intended_for]:checked").val();
+    var inputQTY_exceeds = false;
 
     if (!request_num) {
         $("input[name=request_slip_num]").addClass("border border-danger");
@@ -250,14 +269,36 @@ $("button[name=submit]").click(() => {
                     $(cell).removeClass("border border-danger");
 
                     //Validate numeric entries
-                    if ($(cell).data("int")) {
-                        if (!$.isNumeric($(cell).text())) {
-                            $(cell).addClass("border border-danger");
-                            $("span[name=warning_numbers]")
-                                .removeClass("d-none")
-                                .addClass("d-block");
-                            is_ready = false;
+                    // if ($(cell).data("int")) {
+                    //     if (!$.isNumeric($(cell).text())) {
+                    //         $(cell).addClass("border border-danger");
+                    //         $("span[name=warning_numbers]")
+                    //             .removeClass("d-none")
+                    //             .addClass("d-block");
+                    //         is_ready = false;
+                    //     }
+                    // }
+
+                    //Check QTY if exceeds to Stock
+                    if ($(cell).data("col") == "item") {
+                        var stock = $(cell)
+                            .find("select option:selected")
+                            .data("qty");
+                        var qty_input = $(cell).next().text();
+                        console.log("stock: " + stock);
+                        console.log("qty: " + qty_input);
+                        if (qty_input > stock) {
+                            inputQTY_exceeds = true;
                         }
+                    }
+
+                    if ($(cell).data("col") == "qty" && inputQTY_exceeds) {
+                        $(cell).addClass("border border-danger");
+                        $("div[name=warning_qty]")
+                            .removeClass("d-none")
+                            .addClass("d-block");
+                        is_ready = false;
+                        inputQTY_exceeds = false;
                     }
 
                     if ($(cell).data("required") && $(cell).text() == "") {
@@ -344,6 +385,8 @@ $("#table_main tbody").on("click", "tr", function () {
     _selected_item = _rowdata.item;
     _selected_item_id = _rowdata.id;
     console.log(_rowdata);
+    var intendedfor = (_rowdata.intended_for != "")? _rowdata.intended_for : "";
+
 
     $("div[name=toast_delete_msg]").html(""); //Reset
     $("div[name=toast_delete_msg]").append(
@@ -379,7 +422,7 @@ $("#table_main tbody").on("click", "tr", function () {
     $("input[name=details_date_requested]").val(_rowdata.date_requested);
     $("input[name=details_approved_by]").val(_rowdata.approved_by);
     $("input[name=details_date_approved]").val(_rowdata.date_approved);
-    $(`input[name=details_intended_for][value=${_rowdata.intended_for}]`).prop(
+    $(`input[name=details_intended_for][value="${intendedfor}"]`).prop(
         "checked",
         true
     );
@@ -426,6 +469,7 @@ $("button[name=discard]").click(() => {
     $("button[name=saveChanges]").hide();
 
     $("#table_details td[data-col=item] select").remove();
+    var intendedfor = (_rowdata.intended_for != "")? _rowdata.intended_for : "";
 
     //Set Field Data
     $("input[name=details_req_slip_num]").val(_rowdata.request_slip_num);
@@ -440,7 +484,7 @@ $("button[name=discard]").click(() => {
     $("input[name=details_date_requested]").val(_rowdata.date_requested);
     $("input[name=details_approved_by]").val(_rowdata.approved_by);
     $("input[name=details_date_approved]").val(_rowdata.date_approved);
-    $(`input[name=details_intended_for][value=${_rowdata.intended_for}]`).prop(
+    $(`input[name=details_intended_for][value="${intendedfor}"]`).prop(
         "checked",
         true
     );
@@ -531,7 +575,7 @@ $("button[name=saveChanges]").click(() => {
     // console.log("approved_by: "+input_approved_by);
     // console.log("date_approved: "+input_date_approved);
     // console.log("intended_for: "+input_intended_for);
-    console.log("status: "+input_status);
+    console.log("status: " + input_status);
 
     $("#modalViewDetails").modal("hide");
     $("div[name=toast_success_msg]").html(
@@ -559,7 +603,7 @@ $("button[name=saveChanges]").click(() => {
             data_approved_by: input_approved_by,
             data_date_approved: input_date_approved,
             data_intended_for: input_intended_for,
-            data_status: input_status
+            data_status: input_status,
         },
         function (data) {
             console.log(data);

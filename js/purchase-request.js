@@ -91,6 +91,8 @@ $(document)
             if (
                 event.keyCode === 8 ||
                 event.keyCode === 46 ||
+                event.keyCode === 190 ||
+                event.keyCode === 110 ||
                 event.keyCode === 9
             ) {
                 return true;
@@ -110,12 +112,21 @@ $(document)
 
     .on("keyup", "td[data-col=qty_per_unit]", function () {
         var qtyperunit = $(this).text();
+        var unitperbatch = $(this).next().next().text();
         var unitcost = $(this).next().next().next().text();
-        var total_qty = qtyperunit * 36;
+        var total_qty = qtyperunit * unitperbatch;
         var amountperunit = qtyperunit * unitcost;
 
         $(this).next().next().next().next().text(total_qty);
         $(this).next().next().next().next().next().text(amountperunit);
+    })
+
+    .on("keyup", "td[data-col=unit_per_batch]", function () {
+        var unitperbatch = $(this).text();
+        var qtyperunit = $(this).prev().prev().text();
+        var total_qty = qtyperunit * unitperbatch;
+
+        $(this).next().next().text(total_qty);
     })
 
     .on("keyup", "td[data-col=unitcost]", function () {
@@ -304,21 +315,21 @@ $("button[name=add]").click(() => {
     });
 
     // FOR TESTING
-    console.log(is_ready);
-    console.log(purchase_num);
-    console.log(data_item);
-    console.log(data_qty_per_unit);
-    console.log(data_uom);
-    console.log(data_unit_per_batch);
-    console.log(data_unitcost);
-    console.log(data_total_qty);
-    console.log(data_amount_per_unit);
-    console.log(data_total_amount);
-    console.log(data_remarks);
-    console.log(phase);
-    console.log(block);
-    console.log(lot);
-    console.log(status);
+    // console.log(is_ready);
+    // console.log(purchase_num);
+    // console.log(data_item);
+    // console.log(data_qty_per_unit);
+    // console.log(data_uom);
+    // console.log(data_unit_per_batch);
+    // console.log(data_unitcost);
+    // console.log(data_total_qty);
+    // console.log(data_amount_per_unit);
+    // console.log(data_total_amount);
+    // console.log(data_remarks);
+    // console.log(phase);
+    // console.log(block);
+    // console.log(lot);
+    // console.log(status);
 
     if (is_ready) {
         var json_item = JSON.stringify(data_item);
@@ -380,6 +391,7 @@ $("#table_main tbody").on("click", "tr", function () {
     $("input[name=details_phase]").prop("disabled", true);
     $("input[name=details_block]").prop("disabled", true);
     $("input[name=details_lot]").prop("disabled", true);
+    $("select[name=details_status]").prop("disabled", true);
 
     var table = $("#table_main").DataTable();
 
@@ -406,7 +418,7 @@ $("#table_main tbody").on("click", "tr", function () {
     $("input[name=details_phase]").val(_rowdata.phase);
     $("input[name=details_block]").val(_rowdata.block);
     $("input[name=details_lot]").val(_rowdata.lot);
-    $("select[name=details_status] option:selected").text(_rowdata.status);
+    $("select[name=details_status]").val(_rowdata.status);
 
     $("#modalViewDetails").modal("show");
 });

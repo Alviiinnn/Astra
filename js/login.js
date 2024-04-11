@@ -11,6 +11,10 @@ $('#login').on('submit', function(e){
             alert("Username does not exists!");
         }
 
+        if(data.includes('Disabled_User')){
+            alert("Sorry, your account is disabled by the Admin.");
+        }
+
         if(data.includes('Incorrect_Password')){
             alert("Username or Password is incorrect!");
         }

@@ -17,23 +17,23 @@ if ($request_type == "Inventory") {
     $sql_getHighStock = "SELECT highest_stock FROM inventory_tbl WHERE item_id = '$id'";
     $result = $conn->query($sql_getHighStock);
 
-    if($result->num_rows > 0){
+    if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
-        $base_stock_level = $row['highest_stock']; 
+        $base_stock_level = $row['highest_stock'];
     }
 
-    $highest_qty = ($qty < $base_stock_level)? $base_stock_level: $qty;
+    // $highest_qty = ($qty < $base_stock_level) ? $base_stock_level : $qty;
     $percentage_level = ($qty / $base_stock_level) * 100;
 
-    if($percentage_level <= 20){
+    if ($percentage_level <= 20) {
         $level = "Critical";
-    }else if($percentage_level >= 21 && $percentage_level <= 40){
+    } else if ($percentage_level >= 21 && $percentage_level <= 40) {
         $level = "Minimum";
-    }else if($percentage_level >= 41 && $percentage_level <= 60){
+    } else if ($percentage_level >= 41 && $percentage_level <= 60) {
         $level = "Safe";
-    }else if($percentage_level >= 61 && $percentage_level <= 100){
+    } else if ($percentage_level >= 61 && $percentage_level <= 100) {
         $level = "Maximum";
-    }else{
+    } else {
         $level = "";
     }
 
@@ -44,7 +44,7 @@ if ($request_type == "Inventory") {
                 unit_of_measurement = '$uom',
                 unit_cost = '$unitcost',
                 remarks = '$remarks',
-                highest_stock = '$highest_qty',
+                highest_stock = '$qty',
                 stock_level = '$level'
             WHERE item_id = '$id'
             ";
@@ -92,11 +92,12 @@ if ($request_type == "Purchase_Request") {
             ";
 
     if ($conn->query($sql) === TRUE) {
-        echo "Update Success!"; //DO NOT REMOVE THE WORD 'SUCCESS' | Reference: inventory.js
+        echo "Update Success!"; //DO NOT REMOVE THE WORD 'SUCCESS' | Reference: purchase-request.js
     } else {
         echo "Error " . $sql . "<br>" . $conn->error;
     }
 }
+
 
 if ($request_type == "Material_Request") {
     $id = $_POST['data_id'];
@@ -136,10 +137,141 @@ if ($request_type == "Material_Request") {
             ";
 
     if ($conn->query($sql) === TRUE) {
-        echo "Update Success!"; //DO NOT REMOVE THE WORD 'SUCCESS' | Reference: inventory.js
+        echo "Update Success!"; //DO NOT REMOVE THE WORD 'SUCCESS' | Reference: material-request.js
+    } else {
+        echo "Error " . $sql . "<br>" . $conn->error;
+    }
+
+    //Reduce Item Inventory Stock based on Requested Quantity
+    if ($status == "Released") {
+        $new_stock_count = 0;
+        $sql_stock = "SELECT stock FROM inventory_tbl WHERE item_id = '$item_id' ";
+        $result = $conn->query($sql_stock);
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            $new_stock_count = $row['stock'] - $qty;
+        }
+
+        if ($new_stock_count != 0) {
+            $sql_updateStock = "UPDATE inventory_tbl 
+                SET stock = '$new_stock_count' 
+                WHERE item_id = '$item_id' ";
+
+            if ($conn->query($sql_updateStock) === TRUE) {
+                echo "<br>Inventory is Updated!"; //DO NOT REMOVE THE WORD 'SUCCESS' | Reference: material-request.js
+            } else {
+                echo "Error " . $sql . "<br>" . $conn->error;
+            }
+        }
+    }
+}
+
+
+if ($request_type == "Delivery") {
+    $id = $_POST['data_id'];
+    $item = $_POST['data_item'];
+    $pr = $_POST['data_pr'];
+    $qty = $_POST['data_qty'];
+    $uom = $_POST['data_uom'];
+    $date_delivered = $_POST['data_date_delivered'];
+    $dr_number = $_POST['data_dr_number'];
+    $supplier = $_POST['data_supplier'];
+    $status = $_POST['data_status'];
+
+    $sql = "UPDATE delivery_tbl 
+            SET item_name = '$item',
+                pr_number = '$pr',
+                quantity = '$qty',
+                uom = '$uom',
+                date_of_delivery = '$date_delivered',
+                delivery_receipt_num = '$dr_number',
+                supplier = '$supplier',
+                delivery_status = '$status'
+            WHERE delivery_id = '$id'
+            ";
+
+    if ($conn->query($sql) === TRUE) {
+        echo "Update Success!"; //DO NOT REMOVE THE WORD 'SUCCESS' | Reference: delivery.js
+    } else {
+        echo "Error " . $sql . "<br>" . $conn->error;
+    }
+
+    if ($status == "Received") {
+        $sql_inventory = "INSERT INTO inventory_tbl (item_name, pr_number, stock, highest_stock, unit_of_measurement) 
+        VALUES ('$item', '$pr', '$qty', '$qty', '$uom') ";
+
+        if ($conn->query($sql_inventory) === TRUE) {
+            echo "Inventory Insert Success!"; //DO NOT REMOVE THE WORD 'SUCCESS' | Reference: inventory.js
+        } else {
+            echo "Error " . $sql . "<br>" . $conn->error;
+        }
+    }
+}
+
+
+if ($request_type == "Access_Control") {
+    $username = $_POST['data_username'];
+    $pr = ISSET($_POST['data_pr'])? implode(", ", $_POST['data_pr']) : "None";
+    $delivery = ISSET($_POST['data_delivery'])? implode(", ", $_POST['data_delivery']) : "None";
+    $inventory = ISSET($_POST['data_inventory'])? implode(", ", $_POST['data_inventory']) : "None";
+    $withdrawal = ISSET($_POST['data_withdrawal'])? implode(", ", $_POST['data_withdrawal']) : "None";
+    $accesscontrol = ISSET($_POST['data_accesscontrol'])? implode(", ", $_POST['data_accesscontrol']) : "None";
+    $management = ISSET($_POST['data_management'])? implode(", ", $_POST['data_management']) : "None";
+
+    // echo "\nPR: $data_pr\n";
+    // echo "\nisset: ". ISSET($data_pr)."\n";
+    // $pr = (ISSET($data_pr))? implode(", ", $data_pr) : "";
+    // $delivery = implode(", ", $data_delivery);
+    // $inventory = implode(", ", $data_inventory);
+    // $withdrawal = implode(", ", $data_withdrawal);
+    // $accesscontrol = implode(", ", $data_accesscontrol);
+    // $management = implode(", ", $data_management);
+
+    $sql = "UPDATE user_access_tbl 
+            SET purchase = '$pr',
+                delivery = '$delivery',
+                inventory = '$inventory',
+                withdrawal = '$withdrawal',
+                user_access = '$accesscontrol',
+                user_management = '$management'
+            WHERE username = '$username'
+            ";
+
+    if ($conn->query($sql) === TRUE) {
+        echo "Update Success!"; //DO NOT REMOVE THE WORD 'SUCCESS' | Reference: user-management.js
     } else {
         echo "Error " . $sql . "<br>" . $conn->error;
     }
 }
+
+
+if ($request_type == "User_Management") {
+    $id = mysqli_escape_string($conn, $_POST['data_id']);
+    $fname = mysqli_escape_string($conn, $_POST['data_fname']);
+    $lname = mysqli_escape_string($conn, $_POST['data_lname']);
+    $status = mysqli_escape_string($conn, $_POST['data_status']);
+    $username = mysqli_escape_string($conn, $_POST['data_username']);
+    $password = mysqli_escape_string($conn, $_POST['data_password']);
+
+    // Creating a hash  // If you omit the ['cost' => 12] part, it will default to 10
+    $hash = password_hash($password, PASSWORD_DEFAULT, ['cost' => 12]);
+
+    $sql = "UPDATE user_tbl 
+            SET first_name = '$fname',
+                last_name = '$lname',
+                user_status = '$status',
+                user_name = '$username',
+                user_password = '$hash',
+                temp_password = '$password'
+            WHERE user_id = '$id'
+            ";
+
+    if ($conn->query($sql) === TRUE) {
+        echo "Update Success!"; //DO NOT REMOVE THE WORD 'SUCCESS' | Reference: user-management.js
+    } else {
+        echo "Error " . $sql . "<br>" . $conn->error;
+    }
+}
+
 
 $conn->close();

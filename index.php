@@ -33,10 +33,10 @@ if (isset($_SESSION['username'])) {
 
                         <form id="login" method="POST" action="">
                             <div class="mb-3">
-                                <input type="text" class="form-control rounded-1" id="username" name="username" placeholder="Username" value="admin" required>
+                                <input type="text" class="form-control rounded-1" id="username" name="username" placeholder="Username" required>
                             </div>
                             <div class="mb-3">
-                                <input type="password" class="form-control rounded-1" id="password" name="password" placeholder="Password" value="janet" required>
+                                <input type="password" class="form-control rounded-1" id="password" name="password" placeholder="Password" required>
                             </div>
                             <div class="d-grid gap-2">
                                 <button type="submit" class="btn c-bg-green text-white shadow">LOGIN</button>

@@ -23,7 +23,7 @@ if ($request_type == "Purchase_Request") {
     $sql = "DELETE from purchase_req_tbl WHERE pr_id = '$id' ";
 
     if ($conn->query($sql) === TRUE) {
-        echo "Delete Success!"; //DO NOT REMOVE THE WORD 'SUCCESS' | Reference: inventory.js
+        echo "Delete Success!"; //DO NOT REMOVE THE WORD 'SUCCESS' | Reference: purchase-request.js
     } else {
         echo "Error " . $sql . "<br>" . $conn->error;
     }
@@ -36,7 +36,33 @@ if ($request_type == "Material_Request") {
     $sql = "DELETE from material_req_tbl WHERE mat_req_id = '$id' ";
 
     if ($conn->query($sql) === TRUE) {
-        echo "Delete Success!"; //DO NOT REMOVE THE WORD 'SUCCESS' | Reference: inventory.js
+        echo "Delete Success!"; //DO NOT REMOVE THE WORD 'SUCCESS' | Reference: material-request.js
+    } else {
+        echo "Error " . $sql . "<br>" . $conn->error;
+    }
+}
+
+
+if ($request_type == "Delivery") {
+    $id = mysqli_escape_string($conn, $_POST['data_id']);
+
+    $sql = "DELETE from delivery_tbl WHERE delivery_id = '$id' ";
+
+    if ($conn->query($sql) === TRUE) {
+        echo "Delete Success!"; //DO NOT REMOVE THE WORD 'SUCCESS' | Reference: delivery.js
+    } else {
+        echo "Error " . $sql . "<br>" . $conn->error;
+    }
+}
+
+
+if ($request_type == "User_Management") {
+    $id = mysqli_escape_string($conn, $_POST['data_id']);
+
+    $sql = "DELETE from user_tbl WHERE user_id = '$id' ";
+
+    if ($conn->query($sql) === TRUE) {
+        echo "Delete Success!"; //DO NOT REMOVE THE WORD 'SUCCESS' | Reference: user-management.js
     } else {
         echo "Error " . $sql . "<br>" . $conn->error;
     }

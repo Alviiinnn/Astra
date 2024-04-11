@@ -43,9 +43,8 @@ if (!isset($_SESSION['username'])) {
                 </a>
 
                 <ul class="nav nav-pills align-items-center">
-                    <li class="nav-item px-2"><a href="dashboard.php" class="nav-link c-darkgreen" aria-current="page">Dashboard</a></li>
-                    <li class="nav-item px-2"><a href="inventory.php" class="nav-link c-darkgreen">Inventory</a></li>
-                    <li class="nav-item px-2 dropdown c-bold">
+                    <li class="nav-item px-1"><a href="dashboard.php" class="nav-link c-darkgreen" aria-current="page">Dashboard</a></li>
+                    <li class="nav-item px-1 dropdown c-bold">
                         <a class="nav-link c-darkgreen dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Requests
                         </a>
@@ -54,10 +53,21 @@ if (!isset($_SESSION['username'])) {
                             <li><a class="dropdown-item" href="material-requests.php">Withdrawal Requests</a></li>
                         </ul>
                     </li>
-                    <li class="nav-item px-2"><a href="delivery.php" class="nav-link c-darkgreen">Delivery</a></li>
+                    <li class="nav-item px-1"><a href="delivery.php" class="nav-link c-darkgreen">Delivery</a></li>
+                    <li class="nav-item px-1"><a href="inventory.php" class="nav-link c-darkgreen">Inventory</a></li>
+                    <li class="nav-item px-1 dropdown">
+                        <a class="nav-link c-darkgreen dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Users
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="access-control.php">Access Control</a></li>
+                            <li><a class="dropdown-item" href="user-management.php">User Management</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item px-1"><?php echo $_SESSION['firstname'] ." ".$_SESSION['lastname']; ?></li>
 
                     <i class="bi bi-box-arrow-right"></i>
-                    <li class="nav-item px-2" name="logout">
+                    <li class="nav-item px-1" name="logout">
                         <a href="index.php" class="nav-link c-darkgreen">
                             <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
                                 <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0z" />
@@ -80,10 +90,11 @@ if (!isset($_SESSION['username'])) {
         <button class="btn btn-success" id="addRequest" data-bs-toggle="modal" data-bs-target="#modalPurchaseReq" type="button">Add Request</button>
         <select id="statusFilter" class="form-select c-float-right" style="width: 10em;">
             <option value="0" selected disabled>- Status Filter -</option>
-            <option value="pending">Pending</option>
-            <option value="processing">Processing</option>
-            <option value="released">Released</option>
-            <option value="denied">Denied</option>
+            <option value="Pending">Pending</option>
+            <option value="Processing">Processing</option>
+            <option value="Approved">Approved</option>
+            <option value="Completed">Completed</option>
+            <option value="Denied">Denied</option>
         </select>
     </div>
 
@@ -199,10 +210,11 @@ if (!isset($_SESSION['username'])) {
                             <label class="col-lg-1">Status:</label>
                             <div class="col-lg-2">
                                 <select class="form-select col-lg-3" name="istatus">
-                                    <option>Pending</option>
-                                    <option>Processing</option>
-                                    <option>Released</option>
-                                    <option>Denied</option>
+                                    <option value="Pending">Pending</option>
+                                    <option value="Processing">Processing</option>
+                                    <option value="Approved">Approved</option>
+                                    <option value="Completed">Completed</option>
+                                    <option value="Denied">Denied</option>
                                 </select>
                             </div>
                             <div class="col-lg-9 text-end" style="font-size: 12px;">
@@ -301,10 +313,11 @@ if (!isset($_SESSION['username'])) {
                             <label class="col-lg-1">Status:</label>
                             <div class="col-lg-2">
                                 <select class="form-select col-lg-3" name="details_status" disabled>
-                                    <option>Pending</option>
-                                    <option>Processing</option>
-                                    <option>Released</option>
-                                    <option>Denied</option>
+                                    <option value="Pending">Pending</option>
+                                    <option value="Processing">Processing</option>
+                                    <option value="Approved">Approved</option>
+                                    <option value="Completed">Completed</option>
+                                    <option value="Denied">Denied</option>
                                 </select>
                             </div>
                             <div class="col-lg-9 text-end" style="font-size: 12px;">

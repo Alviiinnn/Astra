@@ -9,11 +9,33 @@ var _selected_item_id;
 var _rowdata;
 
 $(document).ready(function () {
-
     const urlParams = new URLSearchParams(window.location.search);
-    const dashboard_card = urlParams.get('filter');
+    const dashboard_card = urlParams.get("filter");
 
     $("#table_main").DataTable({
+        // ajax: function (data, callback, settings) {
+        //     $.getJSON("./includes/get_inventory.php", function (json) {
+        //         // Check if the data array is empty
+        //         console.log(data);
+        //         console.log(callback);
+        //         console.log(settings);
+        //         if (json.data && json.data.length === 0) {
+        //             // Handle empty data scenario (e.g., display a message)
+        //             callback({
+        //                 data: [], // Return an empty data array to prevent errors
+        //             });
+        //         } else {
+        //             callback(json); // Process data as usual
+        //         }
+        //     });
+        // },
+        // oLanguage: {
+        //     sEmptyTable: "My Custom Message On Empty Table",
+        // },
+        // language: {
+        //     emptyTable: "Nooo data",
+        //     infoEmpty: "No entries to show",
+        // },
         ajax: {
             url: "./includes/get_inventory.php", // URL of your server-side script
             dataSrc: "", // No additional data source parsing needed (since response is already an array)
@@ -25,8 +47,9 @@ $(document).ready(function () {
             { data: "stock_qty" },
             { data: "highest_stock" },
             { data: "percentage_level" },
-            { data: "stock_level" }
+            { data: "stock_level" },
         ],
+
         columnDefs: [
             // { targets: [2, 4], searchable: true }, //Column 2 = Category; Column 4 = Stock Level
             // { targets: "_all", searchable: false },
@@ -46,23 +69,23 @@ $(document).ready(function () {
                 api.search(filterValue).draw();
             });
 
-            if(dashboard_card == "Maximum"){
+            if (dashboard_card == "Maximum") {
                 api.search("Maximum").draw();
             }
-            if(dashboard_card == "Safe"){
+            if (dashboard_card == "Safe") {
                 api.search("Safe").draw();
             }
-            if(dashboard_card == "Minimum"){
+            if (dashboard_card == "Minimum") {
                 api.search("Minimum").draw();
             }
-            if(dashboard_card == "Critical"){
+            if (dashboard_card == "Critical") {
                 api.search("Critical").draw();
             }
         },
         layout: {
             bottom2End: {
-                buttons: ['copy', 'csv', 'excel', 'pdf', 'print']
-            }
+                buttons: ["copy", "csv", "excel", "pdf", "print"],
+            },
             // top2Start: 'pageLength',
             // top2End: 'search',
             // topStart: 'info',
@@ -72,7 +95,7 @@ $(document).ready(function () {
             //     buttons: ['copy', 'csv', 'excel', 'pdf', 'print']
             // },
             // bottom2End: 'paging'
-        }
+        },
 
         // initComplete: function () {
         //     this.api()
@@ -105,8 +128,7 @@ $(document).ready(function () {
         // }
     });
 
-
-        $.get("./includes/get_purchase_request.php").done(function (data) {
+    $.get("./includes/get_purchase_request.php").done(function (data) {
         // _data = data;
         console.log(data);
         // for (var i of data) {
@@ -152,7 +174,8 @@ $("button[name=addRow]").click(() => {
     var ctr = $("#table_form tr").length;
     var row = "<tr>";
     row += `<td>${ctr}</td>`;
-    row += "<td contenteditable data-required='1' data-col='item' class='text-start'></td>";
+    row +=
+        "<td contenteditable data-required='1' data-col='item' class='text-start'></td>";
     row += "<td data-dropdown='1' data-col='category'>";
     row += "    <select class='form-select border-0'>";
     row += "        <option>Electrical</option>";
@@ -320,17 +343,18 @@ $("#table_main tbody").on("click", "tr", function () {
     $("button[name=modify]").show();
     $("button[name=discard]").hide();
     $("button[name=saveChanges]").hide();
-    
+
     var table = $("#table_main").DataTable();
     _rowdata = table.row(this).data();
     _selected_item = _rowdata.item;
     _selected_item_id = _rowdata.id;
+    console.log(_rowdata);
 
     $("div[name=toast_delete_msg]").append(""); //Reset
     $("div[name=toast_delete_msg]").append(
         `Are you sure to delete <b>${_selected_item}?</b>`
     );
-    
+
     $("#table_details td[data-col=item]").text(_rowdata.item);
     $("#table_details td[data-col=category]").text(_rowdata.category);
     $("#table_details td[data-col=qty]").text(_rowdata.quantity);
@@ -409,10 +433,8 @@ $("button[name=modify]").click(() => {
     $("#table_details td[data-col=category]")
         .text("")
         .append(category_dropdown);
-    $("#table_details td[data-col=uom]")
-        .text("")
-        .append(uom_dropdown);
-    
+    $("#table_details td[data-col=uom]").text("").append(uom_dropdown);
+
     $("#table_details td[data-col=category] select").val(_rowdata.category);
     $("#table_details td[data-col=uom] select").val(_rowdata.uom);
 
@@ -451,7 +473,7 @@ $("button[name=discard]").click(() => {
 
 // --
 
-$("button[name=saveChanges]").click(()=>{
+$("button[name=saveChanges]").click(() => {
     var table = $("#table_main").DataTable();
 
     var input_item = $("#table_details td[data-col=item]").text();
@@ -461,6 +483,41 @@ $("button[name=saveChanges]").click(()=>{
     var input_category = $("#table_details td[data-col=category] select").val();
     var input_uom = $("#table_details td[data-col=uom] select").val();
 
+    //Validation
+    if(input_qty > _rowdata.requested_stock){
+        $('div[name=warning_general]').html("<b>Qty</b> must be less than or equal to <b>Requested Stock</b>!").removeClass('d-none').addClass('d-block');
+        $("#table_details td[data-col=qty]").addClass('border border-danger');
+    }else{
+        $('div[name=warning_general]').removeClass('d-block').addClass('d-none');
+        $("#table_details td[data-col=qty]").removeClass('border border-danger');
+        
+        $.post(
+            "./includes/update.php",
+            {
+                requestType: "Inventory",
+                data_id: _selected_item_id,
+                data_item: input_item,
+                data_qty: input_qty,
+                data_unitcost: input_unitcost,
+                data_remarks: input_remarks,
+                data_category: input_category,
+                data_uom: input_uom,
+            },
+            function (data) {
+                console.log(data);
+                if (data.includes("Success")) {
+                    toast_success.show();
+                    table.ajax.reload();
+
+                    $("#modalViewDetails").modal("hide");
+                    $("div[name=toast_success_msg]").html(
+                        `<b>${_selected_item}</b> updated successfully!`
+                    );
+                }
+            }
+        );
+    }
+
     // console.log(input_item);
     // console.log(input_category);
     // console.log(input_qty);
@@ -468,29 +525,5 @@ $("button[name=saveChanges]").click(()=>{
     // console.log(input_unitcost);
     // console.log(input_remarks);
 
-    $("#modalViewDetails").modal("hide");
-    $("div[name=toast_success_msg]").html(
-        `<b>${_selected_item}</b> updated successfully!`
-    );
 
-    $.post(
-        "./includes/update.php",
-        {
-            requestType: "Inventory",
-            data_id: _selected_item_id,
-            data_item: input_item,
-            data_qty: input_qty,
-            data_unitcost: input_unitcost,
-            data_remarks: input_remarks,
-            data_category: input_category,
-            data_uom: input_uom
-        },
-        function (data) {
-            console.log(data);
-            if (data.includes("Success")) {
-                toast_success.show();
-                table.ajax.reload();
-            }
-        }
-    );
 });

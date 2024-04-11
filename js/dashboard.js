@@ -7,12 +7,42 @@ var xValues = ["Maximum", "Safe", "Minimum", "Critical"];
 // var yValues = [35, 90, 55, 25];
 var yValues = [];
 var barColors = [blue, green, yellow, red];
+var _gData;
 
+$(document).ready(() => {
+    var user = $("input[name=username]").val();
+
+	$.post("./includes/select.php", {
+        requestType: "Access_Control",
+        username: user
+    }, function(data){
+        _gData = data;
+        console.log(data);
+        console.log(data);
+
+        fx_none(data[0].purchase, 'pr');
+        fx_none(data[0].delivery, 'delivery');
+        fx_none(data[0].inventory, 'inventory');
+        fx_none(data[0].withdrawal, 'withdrawal');
+        fx_none(data[0].user_access, 'accessControl');
+        fx_none(data[0].user_management, 'management');
+
+        function fx_none(data, page){
+            if(!data.includes('None')){
+                $(`#link_${page}`).removeClass('d-none');
+                console.log(page);
+            }
+        }
+        // console.log(!(data[0].inventory).includes('None'));
+        // if(!(data[0].inventory).includes('None')){
+        //     $('#link_inventory').removeClass('d-none');
+        // }
+	});
+});
 
 $("li[name=logout]").click(() => {
     $.post("includes/logout.php");
 });
-
 
 $.get("./includes/get_inventory.php").done(function (data) {
     var crit_count = 0;
@@ -34,69 +64,62 @@ $.get("./includes/get_inventory.php").done(function (data) {
             crit_count++;
         }
     });
-	// console.log(typeof(yValues));
-	// console.log(max_count);
-	// console.log(safe_count);
-	// console.log(min_count);
-	// console.log(crit_count);
-	// yValues[0] = max_count;
-	// yValues[1] = safe_count;
-	// yValues[2] = min_count;
-	// yValues[3] = crit_count;
+    // console.log(typeof(yValues));
+    // console.log(max_count);
+    // console.log(safe_count);
+    // console.log(min_count);
+    // console.log(crit_count);
+    // yValues[0] = max_count;
+    // yValues[1] = safe_count;
+    // yValues[2] = min_count;
+    // yValues[3] = crit_count;
 
-	$('#max_count').text(max_count);
-	$('#safe_count').text(safe_count);
-	$('#min_count').text(min_count);
-	$('#crit_count').text(crit_count);
+    $("#max_count").text(max_count);
+    $("#safe_count").text(safe_count);
+    $("#min_count").text(min_count);
+    $("#crit_count").text(crit_count);
 
     yValues = [max_count, safe_count, min_count, crit_count];
 
-	new Chart("myChart", {
-		type: "bar",
-		data: {
-			labels: xValues,
-			datasets: [
-				{
-					backgroundColor: barColors,
-					data: yValues,
-				},
-			],
-		},
-		options: {
-			legend: {
-				display: false,
-			},
-			title: {
-				display: true,
-				text: "Level of Stocks",
-			},
-		},
-	});
+    new Chart("myChart", {
+        type: "bar",
+        data: {
+            labels: xValues,
+            datasets: [
+                {
+                    backgroundColor: barColors,
+                    data: yValues,
+                },
+            ],
+        },
+        options: {
+            legend: {
+                display: false,
+            },
+            title: {
+                display: true,
+                text: "Level of Stocks",
+            },
+        },
+    });
 });
 
 // Cards Click Events
-$("#card_max").click(()=>{
-	window.location.href = "inventory.php?filter=" + encodeURIComponent("Maximum");
+$("#card_max").click(() => {
+    window.location.href =
+        "inventory.php?filter=" + encodeURIComponent("Maximum");
 });
 
-$("#card_safe").click(()=>{
-	window.location.href = "inventory.php?filter=" + encodeURIComponent("Safe");
+$("#card_safe").click(() => {
+    window.location.href = "inventory.php?filter=" + encodeURIComponent("Safe");
 });
 
-$("#card_min").click(()=>{
-	window.location.href = "inventory.php?filter=" + encodeURIComponent("Minimum");
+$("#card_min").click(() => {
+    window.location.href =
+        "inventory.php?filter=" + encodeURIComponent("Minimum");
 });
 
-$("#card_crit").click(()=>{
-	window.location.href = "inventory.php?filter=" + encodeURIComponent("Critical");
+$("#card_crit").click(() => {
+    window.location.href =
+        "inventory.php?filter=" + encodeURIComponent("Critical");
 });
-
-
-
-
-
-
-
-
-
-
