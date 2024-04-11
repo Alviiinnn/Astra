@@ -249,5 +249,3 @@ $("button[name=saveChanges]").click(() => {
         }
     );
 });
-
-//

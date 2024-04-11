@@ -107,7 +107,7 @@ if (!isset($_SESSION['username'])) {
 
 
 
-    <!-- <script src="./js/general.js"></script> -->
+    <script src="./js/general.js"></script>
     <script src="./js/dashboard.js"></script>
 
 </body>
