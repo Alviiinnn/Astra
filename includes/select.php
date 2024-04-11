@@ -21,7 +21,7 @@ if($requestType == "Access_Control"){
                 "delivery" => $row['delivery'],
                 "inventory" => $row['inventory'],
                 "withdrawal" => $row['withdrawal'],
-                "user_access" => $row['user_access'],
+                "user_access" => $row['userccess'],
                 "user_management" => $row['user_management']
             );
         }

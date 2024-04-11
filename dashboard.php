@@ -46,7 +46,7 @@ if (!isset($_SESSION['username'])) {
                     </li>
                     <li id="link_delivery" class="nav-item px-1 d-none"><a href="delivery.php" class="nav-link c-darkgreen">Delivery</a></li>
                     <li id="link_inventory" class="nav-item px-1 d-none"><a href="inventory.php" class="nav-link c-darkgreen">Inventory</a></li>
-                    <li id="link_users" class="nav-item px-1 dropdown ">
+                    <li id="link_users" class="nav-item px-1 dropdown d-none">
                         <a class="nav-link c-darkgreen dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Users
                         </a>
@@ -107,6 +107,7 @@ if (!isset($_SESSION['username'])) {
 
 
 
+    <script src="./js/general.js"></script>
     <script src="./js/dashboard.js"></script>
 
 </body>

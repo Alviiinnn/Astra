@@ -7,38 +7,6 @@ var xValues = ["Maximum", "Safe", "Minimum", "Critical"];
 // var yValues = [35, 90, 55, 25];
 var yValues = [];
 var barColors = [blue, green, yellow, red];
-var _gData;
-
-$(document).ready(() => {
-    var user = $("input[name=username]").val();
-
-	$.post("./includes/select.php", {
-        requestType: "Access_Control",
-        username: user
-    }, function(data){
-        _gData = data;
-        console.log(data);
-        console.log(data);
-
-        fx_none(data[0].purchase, 'pr');
-        fx_none(data[0].delivery, 'delivery');
-        fx_none(data[0].inventory, 'inventory');
-        fx_none(data[0].withdrawal, 'withdrawal');
-        fx_none(data[0].user_access, 'accessControl');
-        fx_none(data[0].user_management, 'management');
-
-        function fx_none(data, page){
-            if(!data.includes('None')){
-                $(`#link_${page}`).removeClass('d-none');
-                console.log(page);
-            }
-        }
-        // console.log(!(data[0].inventory).includes('None'));
-        // if(!(data[0].inventory).includes('None')){
-        //     $('#link_inventory').removeClass('d-none');
-        // }
-	});
-});
 
 $("li[name=logout]").click(() => {
     $.post("includes/logout.php");

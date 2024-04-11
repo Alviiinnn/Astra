@@ -35,6 +35,8 @@ if (!isset($_SESSION['username'])) {
 </head>
 
 <body class="c-bg-khaki">
+    <input type="hidden" name="username" value="<?php echo $_SESSION['username']; ?>" />
+
     <div class="container-fluid c-header-shadow bg-white">
         <div class="container">
             <header class="d-flex flex-wrap justify-content-center mb-4">
@@ -45,30 +47,29 @@ if (!isset($_SESSION['username'])) {
 
                 <ul class="nav nav-pills align-items-center">
                     <li class="nav-item px-1"><a href="dashboard.php" class="nav-link c-darkgreen" aria-current="page">Dashboard</a></li>
-                    </li>
-                    <li class="nav-item px-1 dropdown c-bold">
-                        <a class="nav-link c-darkgreen dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <li id="link_requests" class="nav-item px-1 dropdown d-none">
+                        <a class="nav-link c-darkgreen c-bold dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Requests
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="purchase-requests.php">Purchase Requests</a></li>
-                            <li><a class="dropdown-item" href="material-requests.php">Withdrawal Requests</a></li>
+                            <li id="link_pr" class="d-none"><a class="dropdown-item" href="purchase-requests.php">Purchase Requests</a></li>
+                            <li id="link_withdrawal" class="d-none"><a class="dropdown-item" href="material-requests.php">Withdrawal Requests</a></li>
                         </ul>
                     </li>
-                    <li class="nav-item px-1"><a href="delivery.php" class="nav-link c-darkgreen">Delivery</a></li>
-                    <li class="nav-item px-1"><a href="inventory.php" class="nav-link c-darkgreen">Inventory</a>
-                    <li class="nav-item px-1 dropdown">
+                    <li id="link_delivery" class="nav-item px-1 d-none"><a href="delivery.php" class="nav-link c-darkgreen">Delivery</a></li>
+                    <li id="link_inventory" class="nav-item px-1 d-none"><a href="inventory.php" class="nav-link c-darkgreen">Inventory</a></li>
+                    <li id="link_users" class="nav-item px-1 dropdown d-none">
                         <a class="nav-link c-darkgreen dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Users
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="access-control.php">Access Control</a></li>
-                            <li><a class="dropdown-item" href="user-management.php">User Management</a></li>
+                            <li id="link_accessControl" class="d-none"><a class="dropdown-item" href="access-control.php">Access Control</a></li>
+                            <li id="link_management" class="d-none"><a class="dropdown-item" href="user-management.php">User Management</a></li>
                         </ul>
                     </li>
-                    <li class="nav-item px-1"><?php echo $_SESSION['firstname'] ." ".$_SESSION['lastname']; ?></li>                    
+                    <li class="nav-item px-1"><?php echo $_SESSION['firstname'] . " " . $_SESSION['lastname']; ?></li>
 
-                    <i class="bi bi-box-arrow-right"></i>
+                    <!-- <i class="bi bi-box-arrow-right"></i> -->
                     <li class="nav-item px-1" name="logout">
                         <a href="index.php" class="nav-link c-darkgreen">
                             <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
@@ -77,7 +78,6 @@ if (!isset($_SESSION['username'])) {
                             </svg>
                         </a>
                     </li>
-
                 </ul>
             </header>
         </div>
@@ -495,7 +495,7 @@ if (!isset($_SESSION['username'])) {
         </div>
     </div>
 
-
+    <script src="./js/general.js"></script>
     <script src="js/material-request.js"></script>
 
 </body>
