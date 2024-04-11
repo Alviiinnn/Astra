@@ -46,12 +46,12 @@ if (!isset($_SESSION['username'])) {
                     </li>
                     <li id="link_delivery" class="nav-item px-1 d-none"><a href="delivery.php" class="nav-link c-darkgreen">Delivery</a></li>
                     <li id="link_inventory" class="nav-item px-1 d-none"><a href="inventory.php" class="nav-link c-darkgreen">Inventory</a></li>
-                    <li id="link_users" class="nav-item px-1 dropdown d-none">
+                    <li id="link_users" class="nav-item px-1 dropdown">
                         <a class="nav-link c-darkgreen dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Users
                         </a>
                         <ul class="dropdown-menu">
-                            <li id="link_accessControl" class="d-none"><a class="dropdown-item" href="access-control.php">Access Control</a></li>
+                            <li id="link_accessControl" class=""><a class="dropdown-item" href="access-control.php">Access Control</a></li>
                             <li id="link_management" class="d-none"><a class="dropdown-item" href="user-management.php">User Management</a></li>
                         </ul>
                     </li>
