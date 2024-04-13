@@ -20,7 +20,7 @@ if($result->num_rows > 0){
                 
                 echo "Password_Accepted!";      //WARNING! Do not change this STRING! //Reference: login.js
             }else{
-                echo "Incorrect_Password!";     //WARNING! Do not change this STRING! //Reference: login.js
+                echo "Incorrect_Password! ". $row['user_password'];     //WARNING! Do not change this STRING! //Reference: login.js
             }
         }else{
             echo "Disabled_User!";  //WARNING! Do not change this STRING! //Reference: login.js

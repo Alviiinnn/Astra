@@ -81,7 +81,7 @@ if (!isset($_SESSION['username'])) {
                             <li id="link_management" class=""><a class="dropdown-item" href="user-management.php">User Management</a></li>
                         </ul>
                     </li>
-                    <li class="nav-item px-1"><?php echo $_SESSION['firstname'] . " " . $_SESSION['lastname']; ?></li>
+                    <li id="display_name" class="nav-item px-1"><?php echo $_SESSION['firstname'] . " " . $_SESSION['lastname']; ?></li>
 
                     <!-- <i class="bi bi-box-arrow-right"></i> -->
                     <li class="nav-item px-1" name="logout">
@@ -238,7 +238,8 @@ if (!isset($_SESSION['username'])) {
                                     Looks good!
                                 </div>
                             </div>
-                            <div class="form-floating flex-fill ms-1">
+                            <button id="reset_password" type="button" class="btn btn-outline-danger mb-3" disabled>Reset Password</button>
+                            <div name="temp_password" class="form-floating flex-fill ms-1 d-none">
                                 <input type="password" class="form-control" id="details_password" placeholder="Password" disabled>
                                 <label for="details_password">Temporary Password</label>
                             </div>

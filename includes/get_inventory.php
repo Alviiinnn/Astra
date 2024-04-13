@@ -13,6 +13,7 @@ if ($result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
         $ctr++;
         $stock_qty = $row['stock'] . " " . $row['unit_of_measurement'];
+        $highest_stock = ($row['highest_stock'])? $row['highest_stock']: 1;
         $percentage_level = ($row['stock'] / $row['highest_stock'])*100;
         $percent = round($percentage_level, 2)."%";
 

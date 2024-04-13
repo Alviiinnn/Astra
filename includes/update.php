@@ -1,4 +1,5 @@
 <?php
+session_start();
 require "dbconn.php";
 
 $request_type = mysqli_escape_string($conn, $_POST['requestType']);
@@ -172,6 +173,7 @@ if ($request_type == "Delivery") {
     $item = $_POST['data_item'];
     $pr = $_POST['data_pr'];
     $qty = $_POST['data_qty'];
+    $req_qty = $_POST['data_requestedQTY'];
     $uom = $_POST['data_uom'];
     $date_delivered = $_POST['data_date_delivered'];
     $dr_number = $_POST['data_dr_number'];
@@ -198,7 +200,7 @@ if ($request_type == "Delivery") {
 
     if ($status == "Received") {
         $sql_inventory = "INSERT INTO inventory_tbl (item_name, pr_number, stock, highest_stock, unit_of_measurement) 
-        VALUES ('$item', '$pr', '$qty', '$qty', '$uom') ";
+        VALUES ('$item', '$pr', '$qty', '$req_qty', '$uom') ";
 
         if ($conn->query($sql_inventory) === TRUE) {
             echo "Inventory Insert Success!"; //DO NOT REMOVE THE WORD 'SUCCESS' | Reference: inventory.js
@@ -211,12 +213,12 @@ if ($request_type == "Delivery") {
 
 if ($request_type == "Access_Control") {
     $username = $_POST['data_username'];
-    $pr = ISSET($_POST['data_pr'])? implode(", ", $_POST['data_pr']) : "None";
-    $delivery = ISSET($_POST['data_delivery'])? implode(", ", $_POST['data_delivery']) : "None";
-    $inventory = ISSET($_POST['data_inventory'])? implode(", ", $_POST['data_inventory']) : "None";
-    $withdrawal = ISSET($_POST['data_withdrawal'])? implode(", ", $_POST['data_withdrawal']) : "None";
-    $accesscontrol = ISSET($_POST['data_accesscontrol'])? implode(", ", $_POST['data_accesscontrol']) : "None";
-    $management = ISSET($_POST['data_management'])? implode(", ", $_POST['data_management']) : "None";
+    $pr = isset($_POST['data_pr']) ? implode(", ", $_POST['data_pr']) : "None";
+    $delivery = isset($_POST['data_delivery']) ? implode(", ", $_POST['data_delivery']) : "None";
+    $inventory = isset($_POST['data_inventory']) ? implode(", ", $_POST['data_inventory']) : "None";
+    $withdrawal = isset($_POST['data_withdrawal']) ? implode(", ", $_POST['data_withdrawal']) : "None";
+    $accesscontrol = isset($_POST['data_accesscontrol']) ? implode(", ", $_POST['data_accesscontrol']) : "None";
+    $management = isset($_POST['data_management']) ? implode(", ", $_POST['data_management']) : "None";
 
     // echo "\nPR: $data_pr\n";
     // echo "\nisset: ". ISSET($data_pr)."\n";
@@ -252,11 +254,13 @@ if ($request_type == "User_Management") {
     $status = mysqli_escape_string($conn, $_POST['data_status']);
     $username = mysqli_escape_string($conn, $_POST['data_username']);
     $password = mysqli_escape_string($conn, $_POST['data_password']);
+    $_SESSION['firstname'] = $fname;
+    $_SESSION['lastname'] = $lname;
 
-    // Creating a hash  // If you omit the ['cost' => 12] part, it will default to 10
-    $hash = password_hash($password, PASSWORD_DEFAULT, ['cost' => 12]);
-
-    $sql = "UPDATE user_tbl 
+    if ($password != "") {
+        // Creating a hash  // If you omit the ['cost' => 12] part, it will default to 10
+        $hash = password_hash($password, PASSWORD_DEFAULT, ['cost' => 12]);
+        $sql = "UPDATE user_tbl 
             SET first_name = '$fname',
                 last_name = '$lname',
                 user_status = '$status',
@@ -265,6 +269,16 @@ if ($request_type == "User_Management") {
                 temp_password = '$password'
             WHERE user_id = '$id'
             ";
+    }else{
+        $sql = "UPDATE user_tbl 
+            SET first_name = '$fname',
+                last_name = '$lname',
+                user_status = '$status',
+                user_name = '$username'
+            WHERE user_id = '$id'
+            ";
+    }
+
 
     if ($conn->query($sql) === TRUE) {
         echo "Update Success!"; //DO NOT REMOVE THE WORD 'SUCCESS' | Reference: user-management.js

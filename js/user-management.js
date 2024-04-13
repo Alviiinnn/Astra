@@ -110,6 +110,18 @@ $("form[name=form_addUser]").submit((event) => {
 $("#table_main tbody").on("click", "tr", function () {
     $('button[name=discard]').hide();
     $('button[name=saveChanges]').hide();
+    $('button[name=cancel]').show();
+    $('button[name=delete]').show();
+    $('button[name=modify]').show();
+    $('div[name=temp_password]').addClass('d-none');
+
+    $("#details_fname").prop('disabled', true);
+    $("#details_lname").prop('disabled', true);
+    $("#details_status").prop('disabled', true);
+    $("#details_username").prop('disabled', true);
+    $("#details_password").prop('disabled', true);
+    $("#reset_password").prop('disabled', true).show();
+    $("select[name=details_status]").prop('disabled', true);
 
     var table = $("#table_main").DataTable();
 
@@ -121,8 +133,8 @@ $("#table_main tbody").on("click", "tr", function () {
     $('#details_fname').val(_rowdata.first_name);
     $('#details_lname').val(_rowdata.last_name);
     $('#details_username').val(_rowdata.username);
-    $('#details_password').val(_rowdata.password);
     $('select[name=details_status]').val(_rowdata.status);
+    $('#details_password').val("");
 
     $("#modalUserDetails").modal("show");
 });
@@ -171,21 +183,24 @@ $("button[name=modify]").click(() => {
     $("#details_status").prop('disabled', false);
     $("#details_username").prop('disabled', false);
     $("#details_password").prop('disabled', false);
+    $("#reset_password").prop('disabled', false);
     $("select[name=details_status]").prop('disabled', false);
 });
 
 // Discard Changes on Selected Item
 $("button[name=discard]").click(() => {
+    $("#reset_password").show();
     $("button[name=cancel]").show();
     $("button[name=delete]").show();
     $("button[name=modify]").show();
     $("button[name=discard]").hide();
     $("button[name=saveChanges]").hide();
+    $("div[name=temp_password]").addClass('d-none');
 
     $('#details_fname').val(_rowdata.first_name);
     $('#details_lname').val(_rowdata.last_name);
     $('#details_username').val(_rowdata.username);
-    $('#details_password').val(_rowdata.password);
+    $('#details_password').val("");
     $('select[name=details_status]').val(_rowdata.status);
 
     $("#details_fname").prop('disabled', true);
@@ -193,6 +208,7 @@ $("button[name=discard]").click(() => {
     $("#details_status").prop('disabled', true);
     $("#details_username").prop('disabled', true);
     $("#details_password").prop('disabled', true);
+    $("#reset_password").prop('disabled', true);
     $("select[name=details_status]").prop('disabled', true);
 });
 
@@ -208,7 +224,7 @@ $("button[name=saveChanges]").click(() => {
     // console.log("lastname: "+lastname);
     // console.log("status: "+status);
     // console.log("username: "+username);
-    // console.log("password: "+password);
+    console.log("password: "+password);
 
     $("div[name=toast_success_msg]").html(
         `<b>${_selected_user}</b> updated successfully!`
@@ -230,12 +246,20 @@ $("button[name=saveChanges]").click(() => {
         function (data) {
             console.log(data);
             if (data.includes("Success")) {
+                $('#display_name').html(firstname +" "+lastname);
                 $("#modalUserDetails").modal("hide");
                 toast_success.show();
                 table.ajax.reload();
+                
             }
         }
     );
+});
+
+
+$("#reset_password").click(function(){
+    $(this).hide();
+    $('div[name=temp_password]').removeClass('d-none');
 });
 
 //

@@ -503,6 +503,7 @@ $("button[name=saveChanges]").click(() => {
     var input_item = $("#table_details td[data-col=item] select").val();
     var input_pr = $("#table_details td[data-col=item] select option:selected").data('pr');
     var input_qty = $("#table_details td[data-col=qty]").text();
+    var requested_qty = _rowdata.qty;
     var input_uom = $("#table_details td[data-col=uom] select").val();
     var input_date_delivered = $(
         "#table_details td[data-col=delivered_date] input"
@@ -510,7 +511,6 @@ $("button[name=saveChanges]").click(() => {
     var input_dr_number = $("#table_details td[data-col=dr_number]").text();
     var input_supplier = $("#table_details td[data-col=supplier]").text();
     var input_status = $("#table_details td[data-col=status] select").val();
-
     // console.log("item: " + input_item);
     // console.log("pr: " + input_pr);
     // console.log("qty: " + input_qty);
@@ -535,6 +535,7 @@ $("button[name=saveChanges]").click(() => {
             data_item: input_item,
             data_pr: input_pr,
             data_qty: input_qty,
+            data_requestedQTY: requested_qty,
             data_uom: input_uom,
             data_date_delivered: input_date_delivered,
             data_dr_number: input_dr_number,
