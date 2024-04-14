@@ -7,7 +7,7 @@ const toast_delete = bootstrap.Toast.getOrCreateInstance(toast_delete_id);
 var _selected_item;
 var _selected_item_id;
 var _rowdata;
-var _datalist_items;
+var _datalist_items = "";
 var _datalist_changed = false;
 var _datalist_changed_item;
 
@@ -75,7 +75,7 @@ $(document).ready(function () {
 
     $.get("./includes/get_purchase_request.php").done(function (data) {
         $("#table_form td[data-col=qty]").text(data[0].total_qty);
-        $("#table_form td[data-col=uom] select").val(data[0].uom);
+        $("#table_form td[data-col=uom]").text(data[0].uom);
         for (var i of data) {
             if (i.status == "Approved") {
                 $("select[name=itemlist]").append(
@@ -101,8 +101,8 @@ $(document)
         if (
             event.keyCode === 8 ||
             event.keyCode === 46 ||
-            event.keyCode === 190 ||    //Dot - keyboard
-            event.keyCode === 110 ||    //Dot - num keys
+            event.keyCode === 190 || //Dot - keyboard
+            event.keyCode === 110 || //Dot - num keys
             event.keyCode === 9
         ) {
             return true;
@@ -112,20 +112,23 @@ $(document)
             return true;
         }
 
-
         // Allow only digits and prevent default action for others
         if (!regex.test(key)) {
             event.preventDefault();
             return false;
         }
     })
-    .on("change", "select[name=itemlist], select[name=details_itemlist]", function () {
-        var qty = $(this).find('option:selected').data('qty');
-        var uom = $(this).find('option:selected').data('uom');
-        $("#table_form td[data-col=qty]").text(qty);
-        $("#table_form td[data-col=uom] select").val(uom);
+    .on("change", "select[name^=itemlist]", function () {
+        var qty = $(this).find("option:selected").data("qty");
+        var uom = $(this).find("option:selected").data("uom");
+        $(this).parent().next().text(qty);
+        $(this).parent().next().next().text(uom);
+    })
+    .on("change", "select[name=details_itemlist]", function () {
+        var qty = $(this).find("option:selected").data("qty");
+        var uom = $(this).find("option:selected").data("uom");
         $("#table_details td[data-col=qty]").text(qty);
-        $("#table_details td[data-col=uom] select").val(uom);
+        $("#table_details td[data-col=uom]").text(uom);
 
         _datalist_changed_item = $(this).val();
         _datalist_changed = true;
@@ -150,28 +153,17 @@ $("#statusFilter").insertBefore("#table_main");
 $(".dt-search input").removeClass("form-control-sm");
 
 $("button[name=addRow]").click(() => {
-    // var ctr = $('#table_form tr:eq(5) td').eq(0).text();
     $("button[name=removeRow]").prop("disabled", false);
     var ctr = $("#table_form tr").length;
     var row = "<tr>";
     row += `<td>${ctr}</td>`;
-    row += "<td contenteditable data-col='item' data-required='1' data-dropdown='1'>";
-    row += `   <input class='form-control border-0' list='datalist_item${ctr}' placeholder='Type to search item...'>`;
-    row += `   <datalist id='datalist_item${ctr}'></datalist>`;
+    row +=
+        "<td contenteditable data-col='item' data-required='1' data-dropdown='1'>";
+    row += `   <select name="itemlist${ctr}" class="form-select border-0"></select>`;
     row += "</td>";
     row +=
         "<td contenteditable data-int='1' data-col='qty' data-required='1'></td>";
-    row += "<td data-dropdown='1' data-col='uom'>";
-    row += "    <select class='form-select border-0'>";
-    row += "        <option>pcs</option>";
-    row += "        <option>bags</option>";
-    row += "        <option>kl</option>";
-    row += "        <option>box</option>";
-    row += "        <option>gal</option>";
-    row += "        <option>tin</option>";
-    row += "        <option>ltrs</option>";
-    row += "    </select>";
-    row += "</td>";
+    row += "<td data-col='uom'></td>";
     row += "<td data-col='delivered_date' data-required='1'>";
     row +=
         " <input class='form-control border-0' type='date' name='delivered_date'/>";
@@ -190,7 +182,11 @@ $("button[name=addRow]").click(() => {
     row += "</tr>";
 
     $("#table_form").append(row);
-    $(`#datalist_item${ctr}`).append(_datalist_items);
+    $(`select[name=itemlist${ctr}]`).append(_datalist_items);
+    var def_qty = $(`select[name=itemlist${ctr}] option:first`).data("qty");
+    var def_uom = $(`select[name=itemlist${ctr}] option:first`).data("uom");
+    $(`select[name=itemlist${ctr}]`).parent().next().text(def_qty);
+    $(`select[name=itemlist${ctr}]`).parent().next().next().text(def_uom);
 });
 
 $("button[name=removeRow]").click(() => {
@@ -215,6 +211,7 @@ $("button[name=add]").click(() => {
     var is_ready = true;
     var data_item = new Array();
     var data_pr = new Array();
+    var data_pr_qty = new Array();
     var data_qty = new Array();
     var data_uom = new Array();
     var data_date_of_delivery = new Array();
@@ -254,6 +251,9 @@ $("button[name=add]").click(() => {
                         case "qty":
                             data_qty.push($(cell).text());
                             break;
+                        case "uom":
+                            data_uom.push($(cell).text());
+                            break;
                         case "dr_number":
                             data_DR_number.push($(cell).text());
                             break;
@@ -268,10 +268,16 @@ $("button[name=add]").click(() => {
                         switch ($(cell).data("col")) {
                             case "item":
                                 data_item.push($(cell).find("select").val());
-                                data_pr.push($(cell).find("select option:selected").data('pr'));
-                                break;
-                            case "uom":
-                                data_uom.push($(cell).find("select").val());
+                                data_pr.push(
+                                    $(cell)
+                                        .find("select option:selected")
+                                        .data("pr")
+                                );
+                                data_pr_qty.push(
+                                    $(cell)
+                                        .find("select option:selected")
+                                        .data("qty")
+                                );
                                 break;
                             case "status":
                                 data_status.push($(cell).find("select").val());
@@ -310,9 +316,10 @@ $("button[name=add]").click(() => {
     // console.log(is_ready);
     // console.log(data_item);
     // console.log(data_pr);
+    console.log(data_pr_qty);
     // console.log(data_qty);
-    // console.log(data_uom);
-    // console.log(data_date_of_delivery);
+    console.log(data_uom);
+    console.log(data_date_of_delivery);
     // console.log(data_DR_number);
     // console.log(data_supplier);
     // console.log(data_status);
@@ -320,6 +327,7 @@ $("button[name=add]").click(() => {
     if (is_ready) {
         var json_item = JSON.stringify(data_item);
         var json_pr = JSON.stringify(data_pr);
+        var json_pr_qty = JSON.stringify(data_pr_qty);
         var json_qty = JSON.stringify(data_qty);
         var json_uom = JSON.stringify(data_uom);
         var json_date_of_delivery = JSON.stringify(data_date_of_delivery);
@@ -333,12 +341,13 @@ $("button[name=add]").click(() => {
                 requestType: "Add_Delivery",
                 data_item: json_item,
                 data_pr: json_pr,
+                data_pr_qty: json_pr_qty,
                 data_qty: json_qty,
                 data_uom: json_uom,
                 data_date_of_delivery: json_date_of_delivery,
                 data_DR_number: json_DR_number,
                 data_supplier: json_supplier,
-                data_status: json_status
+                data_status: json_status,
             },
             function (data, status) {
                 var table = $("#table_main").DataTable();
@@ -350,7 +359,18 @@ $("button[name=add]").click(() => {
                     $("#modalAddDelivery").modal("hide");
                     toast_success.show();
                     table.ajax.reload();
-                    // location.reload();
+
+                    //RESET INPUTS
+                    var selector = $('select[name=itemlist]');
+                    var default_qty = $('select[name=itemlist] option:selected').data('qty');
+                    var default_uom = $('select[name=itemlist] option:selected').data('uom');
+                    selector.find('option:first').prop('selected', true);
+                    selector.parent().next().text(default_qty);
+                    selector.parent().next().next().text(default_uom);
+                    selector.parent().next().next().next().find('input').val('');
+                    selector.parent().next().next().next().next().text('');
+                    selector.parent().next().next().next().next().next().text('');
+                    selector.parent().next().next().next().next().next().next().find('select').val('Pending');
                 }
             }
         );
@@ -431,18 +451,7 @@ $("button[name=modify]").click(() => {
     $("button[name=saveChanges]").show();
 
     var item_datalist = `<select name="details_itemlist" class="form-select border-0"></select>`;
-    var uom_dropdown = `<select class="form-select border-0">
-        <option>pcs</option>
-        <option>bags</option>
-        <option>kl</option>
-        <option>box</option>
-        <option>gal</option>
-        <option>tin</option>
-        <option>ltrs</option>
-    </select>`;
-
     var delivered_date = `<input class="form-control border-0" type="date" name="delivered_date" />`;
-
     var status_dropdown = `<select class="form-select border-0">
         <option>Pending</option>
         <option>In Transit</option>
@@ -452,13 +461,11 @@ $("button[name=modify]").click(() => {
     </select>`;
 
     $("#table_details td[data-col=item]").text("").append(item_datalist);
-    $("#table_details td[data-col=uom]").text("").append(uom_dropdown);
     $("#table_details td[data-col=delivered_date]")
         .text("")
         .append(delivered_date);
     $("#table_details td[data-col=status]").text("").append(status_dropdown);
 
-    $("#table_details td[data-col=uom] select").val(_rowdata.uom);
     $("#table_details td[data-col=delivered_date] input").val(
         _rowdata.date_of_delivery
     );
@@ -481,7 +488,6 @@ $("button[name=discard]").click(() => {
 
     $("#table_details td[data-col=item] input").remove();
     $("#table_details td[data-col=item] datalist").remove();
-    $("#table_details td[data-col=uom] select").remove();
     $("#table_details td[data-col=status] select").remove();
 
     $("#table_details td[data-col=item]").removeAttr("contenteditable");
@@ -501,21 +507,28 @@ $("button[name=discard]").click(() => {
 // Save Modified Changes on Selected Item
 $("button[name=saveChanges]").click(() => {
     var input_item = $("#table_details td[data-col=item] select").val();
-    var input_pr = $("#table_details td[data-col=item] select option:selected").data('pr');
+    var input_pr = $(
+        "#table_details td[data-col=item] select option:selected"
+    ).data("pr");
+    var input_pr_qty = $(
+        "#table_details td[data-col=item] select option:selected"
+    ).data("qty");
     var input_qty = $("#table_details td[data-col=qty]").text();
-    var requested_qty = _rowdata.qty;
-    var input_uom = $("#table_details td[data-col=uom] select").val();
+    var input_uom = $("#table_details td[data-col=uom]").text();
     var input_date_delivered = $(
         "#table_details td[data-col=delivered_date] input"
     ).val();
     var input_dr_number = $("#table_details td[data-col=dr_number]").text();
     var input_supplier = $("#table_details td[data-col=supplier]").text();
     var input_status = $("#table_details td[data-col=status] select").val();
+
+    //TESTING PURPOSE ONLY
     // console.log("item: " + input_item);
     // console.log("pr: " + input_pr);
-    // console.log("qty: " + input_qty);
-    // console.log("uom: " + input_uom);
-    // console.log("date_delivered : " + input_date_delivered);
+    console.log("pr: " + input_pr_qty);
+    console.log("qty: " + input_qty);
+    console.log("uom: " + input_uom);
+    console.log("date_delivered : " + input_date_delivered);
     // console.log("dr_number : " + input_dr_number);
     // console.log("supplier : " + input_supplier);
     // console.log("status: " + input_status);
@@ -534,8 +547,8 @@ $("button[name=saveChanges]").click(() => {
             data_id: _selected_item_id,
             data_item: input_item,
             data_pr: input_pr,
+            data_pr_qty: input_pr_qty,
             data_qty: input_qty,
-            data_requestedQTY: requested_qty,
             data_uom: input_uom,
             data_date_delivered: input_date_delivered,
             data_dr_number: input_dr_number,

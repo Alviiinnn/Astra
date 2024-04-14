@@ -119,7 +119,7 @@ if (!isset($_SESSION['username'])) {
                     <th scope="col">Item</th>
                     <th scope="col">Category</th>
                     <th scope="col">Current Stock</th>
-                    <th scope="col">Requested Stock</th>
+                    <th scope="col">Base Stock</th>
                     <th scope="col">Stock %</th>
                     <th scope="col">Stock Level</th>
                 </tr>

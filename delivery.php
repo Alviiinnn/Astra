@@ -172,8 +172,9 @@ if (!isset($_SESSION['username'])) {
                                             <select name="itemlist" class="form-select border-0"></select>
                                         </td>
                                         <td contenteditable data-int="1" data-col="qty" data-required="1"></td>
-                                        <td data-dropdown="1" data-col="uom">
-                                            <select class="form-select border-0">
+                                        <td data-col="uom"></td>
+                                        <!-- <td data-dropdown="1" data-col="uom">
+                                            <select class="form-select border-0" disabled>
                                                 <option>pcs</option>
                                                 <option>bags</option>
                                                 <option>kl</option>
@@ -182,7 +183,7 @@ if (!isset($_SESSION['username'])) {
                                                 <option>tin</option>
                                                 <option>ltrs</option>
                                             </select>
-                                        </td>
+                                        </td> -->
                                         <td data-col="delivered_date" data-required="1">
                                             <input class="form-control border-0" type="date" name="delivered_date" />
                                         </td>
@@ -259,7 +260,7 @@ if (!isset($_SESSION['username'])) {
                                     <tr>
                                         <td class="text-start" contenteditable data-required="1" data-col="item"></td>
                                         <td contenteditable data-int="1" data-col="qty" data-required="1"></td>
-                                        <td data-dropdown="1" data-col="uom"></td>
+                                        <td data-col="uom"></td>
                                         <td data-col="delivered_date" data-required="1"></td>
                                         <td contenteditable data-required="1" data-col="dr_number"></td>
                                         <td contenteditable data-col="supplier"></td>

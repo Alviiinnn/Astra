@@ -45,7 +45,7 @@ $(document).ready(function () {
             { data: "item" },
             { data: "category" },
             { data: "stock_qty" },
-            { data: "highest_stock" },
+            { data: "base_stock_uom" },
             { data: "percentage_level" },
             { data: "stock_level" },
         ],
@@ -351,7 +351,7 @@ $("#table_main tbody").on("click", "tr", function () {
     console.log(_rowdata);
 
     $("div[name=toast_delete_msg]").append(""); //Reset
-    $("div[name=toast_delete_msg]").append(
+    $("div[name=toast_delete_msg]").html("").append(
         `Are you sure to delete <b>${_selected_item}?</b>`
     );
 

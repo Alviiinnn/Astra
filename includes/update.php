@@ -15,12 +15,12 @@ if ($request_type == "Inventory") {
     $base_stock_level = 0;
     $level;
 
-    $sql_getHighStock = "SELECT highest_stock FROM inventory_tbl WHERE item_id = '$id'";
+    $sql_getHighStock = "SELECT base_stock FROM inventory_tbl WHERE item_id = '$id'";
     $result = $conn->query($sql_getHighStock);
 
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
-        $base_stock_level = $row['highest_stock'];
+        $base_stock_level = $row['base_stock'];
     }
 
     // $highest_qty = ($qty < $base_stock_level) ? $base_stock_level : $qty;
@@ -45,7 +45,7 @@ if ($request_type == "Inventory") {
                 unit_of_measurement = '$uom',
                 unit_cost = '$unitcost',
                 remarks = '$remarks',
-                highest_stock = '$qty',
+                base_stock = '$qty',
                 stock_level = '$level'
             WHERE item_id = '$id'
             ";
@@ -172,8 +172,8 @@ if ($request_type == "Delivery") {
     $id = $_POST['data_id'];
     $item = $_POST['data_item'];
     $pr = $_POST['data_pr'];
+    $pr_qty = $_POST['data_pr_qty'];
     $qty = $_POST['data_qty'];
-    $req_qty = $_POST['data_requestedQTY'];
     $uom = $_POST['data_uom'];
     $date_delivered = $_POST['data_date_delivered'];
     $dr_number = $_POST['data_dr_number'];
@@ -199,8 +199,8 @@ if ($request_type == "Delivery") {
     }
 
     if ($status == "Received") {
-        $sql_inventory = "INSERT INTO inventory_tbl (item_name, pr_number, stock, highest_stock, unit_of_measurement) 
-        VALUES ('$item', '$pr', '$qty', '$req_qty', '$uom') ";
+        $sql_inventory = "INSERT INTO inventory_tbl (item_name, pr_number, stock, base_stock, unit_of_measurement) 
+        VALUES ('$item', '$pr', '$qty', '$pr_qty', '$uom') ";
 
         if ($conn->query($sql_inventory) === TRUE) {
             echo "Inventory Insert Success!"; //DO NOT REMOVE THE WORD 'SUCCESS' | Reference: inventory.js

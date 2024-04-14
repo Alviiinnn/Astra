@@ -13,8 +13,8 @@ if ($result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
         $ctr++;
         $stock_qty = $row['stock'] . " " . $row['unit_of_measurement'];
-        $highest_stock = ($row['highest_stock'])? $row['highest_stock']: 1;
-        $percentage_level = ($row['stock'] / $row['highest_stock'])*100;
+        $base_stock = ($row['base_stock'])? $row['base_stock']: 1;
+        $percentage_level = ($row['stock'] / $row['base_stock'])*100;
         $percent = round($percentage_level, 2)."%";
 
         if($percentage_level <= 20){
@@ -40,8 +40,8 @@ if ($result->num_rows > 0) {
             "stock_level" => $level,
             "unitcost" => $row['unit_cost'],
             "remarks" => $row['remarks'],
-            "highest_stock" => $row['highest_stock']." ".$row['unit_of_measurement'],
-            "requested_stock" => $row['highest_stock'],
+            "base_stock_uom" => $row['base_stock']." ".$row['unit_of_measurement'],
+            "base_stock" => $row['base_stock'],
             "percentage_level" => $percent
         );
     }

@@ -24,7 +24,7 @@ if ($request_type == "Add_Stock") {
 
     // Loop and Insert Items 
     for ($i = 0; $i < count($item); $i++) {
-        $sql = "INSERT INTO inventory_tbl (item_name, category, stock, unit_of_measurement, unit_cost, remarks, highest_stock) 
+        $sql = "INSERT INTO inventory_tbl (item_name, category, stock, unit_of_measurement, unit_cost, remarks, base_stock) 
                 VALUES ('$item[$i]', '$category[$i]', '$qty[$i]', '$uom[$i]', '$unitcost[$i]', '$remarks[$i]', '$qty[$i]')";
 
         if ($conn->query($sql) === TRUE) {
@@ -117,6 +117,7 @@ if ($request_type == "Add_Material_Request") {
 if ($request_type == "Add_Delivery") {
     $data_item = $_POST['data_item'];
     $data_pr = $_POST['data_pr'];
+    $data_pr_qty = $_POST['data_pr_qty'];
     $data_qty = $_POST['data_qty'];
     $data_uom = $_POST['data_uom'];
     $data_date_of_delivery = $_POST['data_date_of_delivery'];
@@ -126,6 +127,7 @@ if ($request_type == "Add_Delivery") {
 
     $item = json_decode($data_item);
     $pr = json_decode($data_pr);
+    $pr_qty = json_decode($data_pr_qty);
     $qty = json_decode($data_qty);
     $uom = json_decode($data_uom);
     $delivered_date = json_decode($data_date_of_delivery);
@@ -146,8 +148,8 @@ if ($request_type == "Add_Delivery") {
         }
 
         if($status[$i] == "Received"){
-            $sql_inventory = "INSERT INTO inventory_tbl (item_name, pr_number, stock, highest_stock, unit_of_measurement) 
-            VALUES ('$item[$i]', '$pr[$i]', '$qty[$i]', '$qty[$i]', '$uom[$i]')";
+            $sql_inventory = "INSERT INTO inventory_tbl (item_name, pr_number, stock, base_stock, unit_of_measurement) 
+            VALUES ('$item[$i]', '$pr[$i]', '$qty[$i]', '$pr_qty[$i]', '$uom[$i]')";
     
             if ($conn->query($sql_inventory) === TRUE) {
                 echo "Insert Success!"; //DO NOT REMOVE THE WORD 'SUCCESS' | Reference: inventory.js
