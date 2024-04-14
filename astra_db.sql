@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 12, 2024 at 08:50 AM
+-- Generation Time: Apr 14, 2024 at 10:37 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -57,12 +57,7 @@ CREATE TABLE `delivery_tbl` (
 --
 
 INSERT INTO `delivery_tbl` (`delivery_id`, `pr_number`, `item_name`, `quantity`, `uom`, `date_of_delivery`, `delivery_receipt_num`, `supplier`, `delivery_status`) VALUES
-(16, 'PR_001', 'Hollowblocks', 500, 'box', '2024-04-17', '123', 'A', 'Received'),
-(17, 'PR_002', 'Semento', 1000, 'bags', '2024-04-05', '123456', 'b', 'Received'),
-(18, 'PR_003', 'Ladder', 20, 'pcs', '2024-04-12', '12345', 'B', 'Received'),
-(19, 'PR_003', 'Ladder', 15, 'pcs', '2024-04-12', '12345789', 'P', 'Received'),
-(20, 'PR_003', 'Ladder', 8, 'pcs', '2024-04-12', '789456', 'O', 'Received'),
-(21, 'PR_001', 'Hollowblocks', 150, 'pcs', '2024-04-12', '1597', 'K', 'Received');
+(32, 'PR_001', 'Hollowblocks', 525, 'box', '2024-04-17', '4567', 'Q', 'Received');
 
 -- --------------------------------------------------------
 
@@ -80,7 +75,7 @@ CREATE TABLE `inventory_tbl` (
   `unit_of_measurement` varchar(20) DEFAULT NULL,
   `unit_cost` decimal(6,2) NOT NULL,
   `remarks` varchar(500) NOT NULL,
-  `highest_stock` int(11) NOT NULL,
+  `base_stock` int(11) NOT NULL,
   `stock_level` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -88,15 +83,8 @@ CREATE TABLE `inventory_tbl` (
 -- Dumping data for table `inventory_tbl`
 --
 
-INSERT INTO `inventory_tbl` (`item_id`, `user_id`, `pr_number`, `item_name`, `category`, `stock`, `unit_of_measurement`, `unit_cost`, `remarks`, `highest_stock`, `stock_level`) VALUES
-(5, 0, 'PR_001', 'Hollowblocks', NULL, 500, 'box', 0.00, '', 500, ''),
-(6, 0, 'PR_002', 'Semento', '', 1000, 'bags', 0.00, '', 1000, 'Maximum'),
-(7, 0, 'PR_001', 'Hollowblocks', NULL, 1000, 'bags', 0.00, '', 1000, ''),
-(8, 0, 'PR_002', 'Semento', NULL, 1000, 'bags', 0.00, '', 1000, ''),
-(9, 0, 'PR_003', 'Ladder', NULL, 20, 'pcs', 0.00, '', 20, ''),
-(10, 0, 'PR_003', 'Ladder', NULL, 15, 'pcs', 0.00, '', 15, ''),
-(11, 0, 'PR_003', 'Ladder', NULL, 8, 'pcs', 0.00, '', 20, ''),
-(12, 0, 'PR_001', 'Hollowblocks', NULL, 150, 'pcs', 0.00, '', 150, '');
+INSERT INTO `inventory_tbl` (`item_id`, `user_id`, `pr_number`, `item_name`, `category`, `stock`, `unit_of_measurement`, `unit_cost`, `remarks`, `base_stock`, `stock_level`) VALUES
+(22, 0, 'PR_001', 'Hollowblocks', NULL, 525, 'box', 0.00, '', 1000, '');
 
 -- --------------------------------------------------------
 
@@ -129,13 +117,7 @@ CREATE TABLE `material_req_tbl` (
 --
 
 INSERT INTO `material_req_tbl` (`mat_req_id`, `user_name`, `request_slip_no`, `item_id`, `item_name`, `quantity`, `unit_of_measurement`, `remarks`, `phase`, `block`, `lot`, `requested_by`, `date_requested`, `approved_by`, `date_approved`, `intended_for`, `mat_req_status`) VALUES
-(17, NULL, 10001, 42, 'Hollowblocks', 100, 'pcs', 'Eto na ', '10', '11', '12', 'vin', '2024-03-19', 'bin', '2024-03-27', 'manors', 'Released'),
-(18, NULL, 10002, 43, 'Cement', 6, 'kl', 'Eto na ', '10', '11', '12', 'vin', '2024-03-19', 'bin', '2024-03-27', 'manors', 'Released'),
-(19, NULL, 10003, 43, 'Cement', 20, 'pcs', 'Remarks 4', '5', '10', '12', 'lvin', '2024-03-01', 'in', '2024-03-02', 'residences', 'Processing'),
-(20, NULL, 10004, 42, 'Hollowblocks', 50, 'pcs', 'Remarks 4', '10', '20', '30', 'John', '2024-03-13', 'Doe', '2024-03-13', 'villas', 'Pending'),
-(21, NULL, 10005, 42, 'Hollowblocks', 8, 'bags', '', '', '', '', '', '0000-00-00', '', '0000-00-00', '', 'Pending'),
-(22, NULL, 10006, 42, 'Hollowblocks', 8, 'bags', 'Remarks 1', '1', '2', '3', 'Alvin', '2024-04-10', 'John', '2024-04-10', 'manors', 'Released'),
-(23, NULL, 10010, 6, 'Semento', 500, 'bags', '', '1', '2', '3', 'alvin', '2024-04-17', 'john', '2024-04-17', 'manors', 'Released');
+(18, NULL, 10002, 43, 'Cement', 6, 'kl', 'Eto na ', '10', '11', '12', 'vin', '2024-03-19', 'bin', '2024-03-27', 'manors', 'Released');
 
 -- --------------------------------------------------------
 
@@ -202,7 +184,7 @@ INSERT INTO `user_access_tbl` (`username`, `purchase`, `delivery`, `inventory`, 
 CREATE TABLE `user_tbl` (
   `user_id` int(11) NOT NULL,
   `user_name` varchar(20) DEFAULT NULL,
-  `user_password` varchar(200) DEFAULT NULL,
+  `user_password` varchar(255) DEFAULT NULL,
   `first_name` varchar(20) DEFAULT NULL,
   `last_name` varchar(20) DEFAULT NULL,
   `temp_password` varchar(255) DEFAULT NULL,
@@ -219,7 +201,7 @@ CREATE TABLE `user_tbl` (
 --
 
 INSERT INTO `user_tbl` (`user_id`, `user_name`, `user_password`, `first_name`, `last_name`, `temp_password`, `user_status`, `q1_answer`, `q2_answer`, `q3_answer`, `q4_answer`, `q5_answer`) VALUES
-(1, 'admin', '$2y$12$yJGMv1P8bDgHDG/Esi.mK.peB6RiL48lfzzu0MdE5E1B6udIlD8Aa', 'Janet', 'Cruz', NULL, 'Active', '', '', '', '', '');
+(1, 'admin', '$2y$12$ZU3FHzUFBeit.A7Y0iRes.EpmkfDdnWlYpXu4qruUpkft0PUTUcBK', 'Janet', 'Dizon', 'janet', 'Active', '', '', '', '', '');
 
 --
 -- Indexes for dumped tables
@@ -284,13 +266,13 @@ ALTER TABLE `access_control_tbl`
 -- AUTO_INCREMENT for table `delivery_tbl`
 --
 ALTER TABLE `delivery_tbl`
-  MODIFY `delivery_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `delivery_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
 
 --
 -- AUTO_INCREMENT for table `inventory_tbl`
 --
 ALTER TABLE `inventory_tbl`
-  MODIFY `item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `material_req_tbl`
