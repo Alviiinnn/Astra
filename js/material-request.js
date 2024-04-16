@@ -284,6 +284,7 @@ $("button[name=submit]").click(() => {
     const date_requested = $("input[name=date_requested]").val();
     const date_approved = $("input[name=date_approved]").val();
     var intended_for = $("input[name=intended_for]:checked").val();
+    var req_status = $('select[name=status]').val();
     var inputQTY_exceeds = false;
 
     if (!request_num) {
@@ -380,8 +381,8 @@ $("button[name=submit]").click(() => {
     // FOR TESTING
     // console.log(is_ready);
     // console.log(request_num);
-    console.log(data_item_id);
-    console.log(data_item);
+    // console.log(data_item_id);
+    // console.log(data_item);
     // console.log(data_qty);
     // console.log(data_uom);
     // console.log(remarks);
@@ -393,6 +394,7 @@ $("button[name=submit]").click(() => {
     // console.log(approved_by);
     // console.log(date_approved);
     // console.log(intended_for);
+    // console.log(req_status);
 
     if (is_ready) {
         var json_item_id = JSON.stringify(data_item_id);
@@ -418,6 +420,7 @@ $("button[name=submit]").click(() => {
                 data_approved_by: approved_by,
                 data_date_approved: date_approved,
                 data_intended_for: intended_for,
+                data_status: req_status
             },
             function (data, status) {
                 var table = $("#table_main").DataTable();

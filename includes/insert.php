@@ -93,6 +93,7 @@ if ($request_type == "Add_Material_Request") {
     $approved_by = $_POST['data_approved_by'];
     $date_approved = $_POST['data_date_approved'];
     $intended_for = (isset($_POST['data_intended_for'])) ? $_POST['data_intended_for'] : "";
+    $req_status = $_POST['data_status'];
 
     $item_id = json_decode($data_item_id);
     $item = json_decode($data_item);
@@ -102,8 +103,8 @@ if ($request_type == "Add_Material_Request") {
     $user = $_SESSION['username'];
     for ($i = 0; $i < count($item); $i++) {
 
-        $sql = "INSERT INTO material_req_tbl (request_slip_no, item_id, item_name, quantity, unit_of_measurement, remarks, phase, block, lot, requested_by, date_requested, approved_by, date_approved, intended_for) 
-                VALUES ('$req_slip_number', '$item_id[$i]', '$item[$i]', '$qty[$i]', '$uom[$i]', '$remarks', '$phase', '$block', '$lot', '$requested_by', '$date_requested', '$approved_by', '$date_approved', '$intended_for')";
+        $sql = "INSERT INTO material_req_tbl (request_slip_no, item_id, item_name, quantity, unit_of_measurement, remarks, phase, block, lot, requested_by, date_requested, approved_by, date_approved, intended_for, mat_req_status) 
+                VALUES ('$req_slip_number', '$item_id[$i]', '$item[$i]', '$qty[$i]', '$uom[$i]', '$remarks', '$phase', '$block', '$lot', '$requested_by', '$date_requested', '$approved_by', '$date_approved', '$intended_for', '$req_status')";
 
         if ($conn->query($sql) === TRUE) {
             echo "Insert Success!"; //DO NOT REMOVE THE WORD 'SUCCESS' | Reference: inventory.js
