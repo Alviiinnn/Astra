@@ -41,12 +41,77 @@ $(document).ready(function () {
         //     },
         // },
     });
-});
+
+    //USER ACCESS
+    var user = $("input[name=username]").val();
+
+    $.post("./includes/select.php", {
+        requestType: "Access_Control",
+        username: user
+    }).done(function (data) {
+        var data_purchase = data[0].purchase;
+        var data_withdrawal = data[0].withdrawal;
+        var data_delivery = data[0].delivery;
+        var data_inventory = data[0].inventory;
+        var data_userAccess = data[0].user_access;
+        var data_management = data[0].user_management;
+
+        console.log("purchase:" + data_purchase);
+        console.log("withdrawal: " + data_withdrawal);
+        console.log("delivery: " + data_delivery);
+        console.log("inventory: " + data_inventory);
+        console.log("access: " + data_userAccess);
+        console.log("management: " + data_management);
+
+        if(data_management == "None"){
+            location.href = "dashboard.php";
+        }
+
+        if (data_purchase != "None" || data_withdrawal != "None") {
+            $("#link_requests").removeClass("d-none");
+        } else {
+            if (data_purchase != "None") {
+                $("#link_pr").removeClass("d-none");
+            }
+            if (data_withdrawal != "None") {
+                $("#link_withdrawal").removeClass("d-none");
+            }
+        }
+
+        if (data_delivery != "None") {
+            $("#link_delivery").removeClass("d-none");
+        }
+        if (data_inventory != "None") {
+            $("#link_inventory").removeClass("d-none");
+        }
+
+        if (data_management != "None" || data_userAccess != "None") {
+            $("#link_users").removeClass("d-none");
+        } else {
+            if (data_management != "None") {
+                $("#link_management").removeClass("d-none");
+            }
+            if (data_userAccess != "None") {
+                $("#link_accessControl").removeClass("d-none");
+            }
+        }
+
+        if (!data_management.includes("Add")) {
+            $("#addUser").prop("disabled", true);
+        }
+        if (!data_management.includes("Edit")) {
+            $('button[name=modify]').remove();
+        }
+        if (!data_management.includes("Delete")) {
+            $('button[name=delete]').remove();
+        }
+
+    }); //end of User Access
+}); //end of document ready
 
 $("li[name=logout]").click(() => {
     $.post("includes/logout.php");
 });
-
 
 // $("#table_main").DataTable({
 //     paging: false,
@@ -78,7 +143,7 @@ $("form[name=form_addUser]").submit((event) => {
     var password = $("#password").val();
 
     var table = $("#table_main").DataTable();
-    $('#username').removeClass('is-invalid');
+    $("#username").removeClass("is-invalid");
 
     $.post(
         "./includes/validate.php",
@@ -99,8 +164,8 @@ $("form[name=form_addUser]").submit((event) => {
                 table.ajax.reload();
                 // location.reload();
             }
-            if(data.includes("already_exists")){
-                $('#username').addClass('is-invalid');
+            if (data.includes("already_exists")) {
+                $("#username").addClass("is-invalid");
             }
         }
     );
@@ -108,40 +173,42 @@ $("form[name=form_addUser]").submit((event) => {
 
 //Event to view the details modal
 $("#table_main tbody").on("click", "tr", function () {
-    $('button[name=discard]').hide();
-    $('button[name=saveChanges]').hide();
-    $('button[name=cancel]').show();
-    $('button[name=delete]').show();
-    $('button[name=modify]').show();
-    $('div[name=temp_password]').addClass('d-none');
+    $("button[name=discard]").hide();
+    $("button[name=saveChanges]").hide();
+    $("button[name=cancel]").show();
+    $("button[name=delete]").show();
+    $("button[name=modify]").show();
+    $("div[name=temp_password]").addClass("d-none");
 
-    $("#details_fname").prop('disabled', true);
-    $("#details_lname").prop('disabled', true);
-    $("#details_status").prop('disabled', true);
-    $("#details_username").prop('disabled', true);
-    $("#details_password").prop('disabled', true);
-    $("#reset_password").prop('disabled', true).show();
-    $("select[name=details_status]").prop('disabled', true);
+    $("#details_fname").prop("disabled", true);
+    $("#details_lname").prop("disabled", true);
+    $("#details_status").prop("disabled", true);
+    $("#details_username").prop("disabled", true);
+    $("#details_password").prop("disabled", true);
+    $("#reset_password").prop("disabled", true).show();
+    $("select[name=details_status]").prop("disabled", true);
 
     var table = $("#table_main").DataTable();
 
     _rowdata = table.row(this).data();
     _selected_user_id = _rowdata.id;
     _selected_user = _rowdata.username;
-    console.log(_rowdata);    
+    console.log(_rowdata);
 
-    $('#details_fname').val(_rowdata.first_name);
-    $('#details_lname').val(_rowdata.last_name);
-    $('#details_username').val(_rowdata.username);
-    $('select[name=details_status]').val(_rowdata.status);
-    $('#details_password').val("");
+    $("#details_fname").val(_rowdata.first_name);
+    $("#details_lname").val(_rowdata.last_name);
+    $("#details_username").val(_rowdata.username);
+    $("select[name=details_status]").val(_rowdata.status);
+    $("#details_password").val("");
 
     $("#modalUserDetails").modal("show");
 });
 
 // Delete Selected Item
 $("button[name=delete]").click(() => {
-    $('div[name=toast_delete_msg]').html(`Are you sure to delete user <b>${_rowdata.username}</b>?`);
+    $("div[name=toast_delete_msg]").html(
+        `Are you sure to delete user <b>${_rowdata.username}</b>?`
+    );
     toast_delete.show();
     var table = $("#table_main").DataTable();
 
@@ -157,7 +224,7 @@ $("button[name=delete]").click(() => {
             {
                 requestType: "User_Management",
                 data_id: _selected_user_id,
-                data_username: _selected_user
+                data_username: _selected_user,
             },
             function (data) {
                 console.log(data);
@@ -178,13 +245,13 @@ $("button[name=modify]").click(() => {
     $("button[name=discard]").show();
     $("button[name=saveChanges]").show();
 
-    $("#details_fname").prop('disabled', false);
-    $("#details_lname").prop('disabled', false);
-    $("#details_status").prop('disabled', false);
-    $("#details_username").prop('disabled', false);
-    $("#details_password").prop('disabled', false);
-    $("#reset_password").prop('disabled', false);
-    $("select[name=details_status]").prop('disabled', false);
+    $("#details_fname").prop("disabled", false);
+    $("#details_lname").prop("disabled", false);
+    $("#details_status").prop("disabled", false);
+    $("#details_username").prop("disabled", false);
+    $("#details_password").prop("disabled", false);
+    $("#reset_password").prop("disabled", false);
+    $("select[name=details_status]").prop("disabled", false);
 });
 
 // Discard Changes on Selected Item
@@ -195,36 +262,36 @@ $("button[name=discard]").click(() => {
     $("button[name=modify]").show();
     $("button[name=discard]").hide();
     $("button[name=saveChanges]").hide();
-    $("div[name=temp_password]").addClass('d-none');
+    $("div[name=temp_password]").addClass("d-none");
 
-    $('#details_fname').val(_rowdata.first_name);
-    $('#details_lname').val(_rowdata.last_name);
-    $('#details_username').val(_rowdata.username);
-    $('#details_password').val("");
-    $('select[name=details_status]').val(_rowdata.status);
+    $("#details_fname").val(_rowdata.first_name);
+    $("#details_lname").val(_rowdata.last_name);
+    $("#details_username").val(_rowdata.username);
+    $("#details_password").val("");
+    $("select[name=details_status]").val(_rowdata.status);
 
-    $("#details_fname").prop('disabled', true);
-    $("#details_lname").prop('disabled', true);
-    $("#details_status").prop('disabled', true);
-    $("#details_username").prop('disabled', true);
-    $("#details_password").prop('disabled', true);
-    $("#reset_password").prop('disabled', true);
-    $("select[name=details_status]").prop('disabled', true);
+    $("#details_fname").prop("disabled", true);
+    $("#details_lname").prop("disabled", true);
+    $("#details_status").prop("disabled", true);
+    $("#details_username").prop("disabled", true);
+    $("#details_password").prop("disabled", true);
+    $("#reset_password").prop("disabled", true);
+    $("select[name=details_status]").prop("disabled", true);
 });
 
 // Save Modified Changes on Selected Item
 $("button[name=saveChanges]").click(() => {
-    var firstname = $('#details_fname').val();
-    var lastname = $('#details_lname').val();
-    var status = $('select[name=details_status]').val();
-    var username = $('#details_username').val();
-    var password = $('#details_password').val();
+    var firstname = $("#details_fname").val();
+    var lastname = $("#details_lname").val();
+    var status = $("select[name=details_status]").val();
+    var username = $("#details_username").val();
+    var password = $("#details_password").val();
 
     // console.log("firstname: "+firstname);
     // console.log("lastname: "+lastname);
     // console.log("status: "+status);
     // console.log("username: "+username);
-    console.log("password: "+password);
+    console.log("password: " + password);
 
     $("div[name=toast_success_msg]").html(
         `<b>${_selected_user}</b> updated successfully!`
@@ -241,25 +308,23 @@ $("button[name=saveChanges]").click(() => {
             data_lname: lastname,
             data_status: status,
             data_username: username,
-            data_password: password
+            data_password: password,
         },
         function (data) {
             console.log(data);
             if (data.includes("Success")) {
-                $('#display_name').html(firstname +" "+lastname);
+                $("#display_name").html(firstname + " " + lastname);
                 $("#modalUserDetails").modal("hide");
                 toast_success.show();
                 table.ajax.reload();
-                
             }
         }
     );
 });
 
-
-$("#reset_password").click(function(){
+$("#reset_password").click(function () {
     $(this).hide();
-    $('div[name=temp_password]').removeClass('d-none');
+    $("div[name=temp_password]").removeClass("d-none");
 });
 
 //

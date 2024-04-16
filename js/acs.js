@@ -15,9 +15,9 @@ $(document).ready(function () {
             { data: "ctr" },
             { data: "username" },
             { data: "purchase" },
+            { data: "withdrawal" },
             { data: "delivery" },
             { data: "inventory" },
-            { data: "withdrawal" },
             { data: "user_access" },
             { data: "user_management" },
         ],
@@ -67,8 +67,67 @@ $(document).ready(function () {
         //         });
         // },
     });
-});
 
+    //USER ACCESS
+    var user = $("input[name=username]").val();
+
+    $.post("./includes/select.php", {
+        requestType: "Access_Control",
+        username: user
+    }).done(function (data) {
+        var data_purchase = data[0].purchase;
+        var data_withdrawal = data[0].withdrawal;
+        var data_delivery = data[0].delivery;
+        var data_inventory = data[0].inventory;
+        var data_userAccess = data[0].user_access;
+        var data_management = data[0].user_management;
+
+        console.log("purchase:" + data_purchase);
+        console.log("withdrawal: " + data_withdrawal);
+        console.log("delivery: " + data_delivery);
+        console.log("inventory: " + data_inventory);
+        console.log("access: " + data_userAccess);
+        console.log("management: " + data_management);
+
+        if(data_userAccess == "None"){
+            location.href = "dashboard.php";
+        }
+
+        if (data_purchase != "None" || data_withdrawal != "None") {
+            $("#link_requests").removeClass("d-none");
+        } else {
+            if (data_purchase != "None") {
+                $("#link_pr").removeClass("d-none");
+            }
+            if (data_withdrawal != "None") {
+                $("#link_withdrawal").removeClass("d-none");
+            }
+        }
+
+        if (data_delivery != "None") {
+            $("#link_delivery").removeClass("d-none");
+        }
+        if (data_inventory != "None") {
+            $("#link_inventory").removeClass("d-none");
+        }
+
+        if (data_management != "None" || data_userAccess != "None") {
+            $("#link_users").removeClass("d-none");
+        } else {
+            if (data_management != "None") {
+                $("#link_management").removeClass("d-none");
+            }
+            if (data_userAccess != "None") {
+                $("#link_accessControl").removeClass("d-none");
+            }
+        }
+
+        if (!data_userAccess.includes("Edit")) {
+            $('button[name=modify]').remove();
+        }
+    }); //end of User Access
+
+}); //end of document ready
 
 $("li[name=logout]").click(() => {
     $.post("includes/logout.php");
@@ -212,8 +271,6 @@ $("button[name=saveChanges]").click(() => {
     // console.log(checked_accesscontrol);
     // console.log(checked_management);
 
-
-
     var table = $("#table_main").DataTable();
 
     var json_pr = JSON.parse(checked_pr);
@@ -237,7 +294,7 @@ $("button[name=saveChanges]").click(() => {
             data_inventory: json_inventory,
             data_withdrawal: json_withdrawal,
             data_accesscontrol: json_accesscontrol,
-            data_management: json_management
+            data_management: json_management,
         },
         function (data) {
             console.log(data);
@@ -245,6 +302,7 @@ $("button[name=saveChanges]").click(() => {
                 toast_success.show();
                 table.ajax.reload();
                 $("#modalModifyAccess").modal("hide");
+                location.reload();
             }
         }
     );

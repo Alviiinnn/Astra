@@ -52,29 +52,28 @@ if (!isset($_SESSION['username'])) {
 
                 <ul class="nav nav-pills align-items-center">
                     <li class="nav-item px-1"><a href="dashboard.php" class="nav-link c-darkgreen" aria-current="page">Dashboard</a></li>
-                    <li id="link_requests" class="nav-item px-1 dropdown ">
+                    <li id="link_requests" class="nav-item px-1 dropdown d-none">
                         <a class="nav-link c-darkgreen dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Requests
                         </a>
                         <ul class="dropdown-menu">
-                            <li id="link_pr" class=""><a class="dropdown-item" href="purchase-requests.php">Purchase Requests</a></li>
-                            <li id="link_withdrawal" class=""><a class="dropdown-item" href="material-requests.php">Withdrawal Requests</a></li>
+                            <li id="link_pr" class="d-none"><a class="dropdown-item" href="purchase-requests.php">Purchase Requests</a></li>
+                            <li id="link_withdrawal" class="d-none"><a class="dropdown-item" href="material-requests.php">Withdrawal Requests</a></li>
                         </ul>
                     </li>
-                    <li id="link_delivery" class="nav-item px-1 "><a href="delivery.php" class="nav-link c-darkgreen">Delivery</a></li>
-                    <li id="link_inventory" class="nav-item px-1 "><a href="inventory.php" class="nav-link c-darkgreen">Inventory</a></li>
-                    <li id="link_users" class="nav-item px-1 dropdown ">
-                        <a class="nav-link c-darkgreen c-bold dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <li id="link_delivery" class="nav-item px-1 d-none"><a href="delivery.php" class="nav-link c-darkgreen">Delivery</a></li>
+                    <li id="link_inventory" class="nav-item px-1 d-none"><a href="inventory.php" class="nav-link c-darkgreen">Inventory</a></li>
+                    <li id="link_users" class="nav-item px-1 dropdown d-none">
+                        <a class="nav-link c-darkgreen dropdown-toggle c-bold" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Users
                         </a>
                         <ul class="dropdown-menu">
-                            <li id="link_accessControl" class=""><a class="dropdown-item" href="access-control.php">Access Control</a></li>
-                            <li id="link_management" class=""><a class="dropdown-item" href="user-management.php">User Management</a></li>
+                            <li id="link_accessControl" class="d-none"><a class="dropdown-item" href="access-control.php">Access Control</a></li>
+                            <li id="link_management" class="d-none"><a class="dropdown-item" href="user-management.php">User Management</a></li>
                         </ul>
                     </li>
                     <li class="nav-item px-1"><?php echo $_SESSION['firstname'] . " " . $_SESSION['lastname']; ?></li>
 
-                    <!-- <i class="bi bi-box-arrow-right"></i> -->
                     <li class="nav-item px-1" name="logout">
                         <a href="index.php" class="nav-link c-darkgreen">
                             <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
@@ -114,9 +113,9 @@ if (!isset($_SESSION['username'])) {
                     <th scope="col">#</th>
                     <th scope="col">Username</th>
                     <th scope="col">Purchase Request</th>
+                    <th scope="col">Withdrawal Request</th>
                     <th scope="col">Delivery</th>
                     <th scope="col">Inventory</th>
-                    <th scope="col">Withdrawal Request</th>
                     <th scope="col">Access Control</th>
                     <th scope="col">User Management</th>
                 </tr>
@@ -176,6 +175,27 @@ if (!isset($_SESSION['username'])) {
                         </div>
                     </div>
                     <div class="col-lg-2">
+                        <p class="fw-bold">Withdrawal Request</p>
+                        <div class="d-flex flex-column">
+                            <div class="d-flex pb-2">
+                                <input id="cbx_withdrawal_view" value="View" type="checkbox" class="cbx cbx_withdrawal me-2" role="button" disabled />
+                                <label role="button" for="cbx_withdrawal_view">View</label>
+                            </div>
+                            <div class="d-flex pb-2">
+                                <input id="cbx_withdrawal_add" value="Add" type="checkbox" class="cbx cbx_withdrawal me-2" role="button" disabled />
+                                <label role="button" for="cbx_withdrawal_add">Add</label>
+                            </div>
+                            <div class="d-flex pb-2">
+                                <input id="cbx_withdrawal_edit" value="Edit" type="checkbox" class="cbx cbx_withdrawal me-2" role="button" disabled />
+                                <label role="button" for="cbx_withdrawal_edit">Edit</label>
+                            </div>
+                            <div class="d-flex pb-2">
+                                <input id="cbx_withdrawal_delete" value="Delete" type="checkbox" class="cbx cbx_withdrawal me-2" role="button" disabled />
+                                <label role="button" for="cbx_withdrawal_delete">Delete</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2">
                         <p class="fw-bold">Delivery</p>
                         <div class="d-flex flex-column">
                             <div class="d-flex pb-2">
@@ -214,27 +234,6 @@ if (!isset($_SESSION['username'])) {
                             <div class="d-flex pb-2">
                                 <input id="cbx_inventory_delete" value="Delete" type="checkbox" class="cbx cbx_inventory me-2" role="button" disabled />
                                 <label role="button" for="cbx_inventory_delete">Delete</label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-2">
-                        <p class="fw-bold">Withdrawal Request</p>
-                        <div class="d-flex flex-column">
-                            <div class="d-flex pb-2">
-                                <input id="cbx_withdrawal_view" value="View" type="checkbox" class="cbx cbx_withdrawal me-2" role="button" disabled />
-                                <label role="button" for="cbx_withdrawal_view">View</label>
-                            </div>
-                            <div class="d-flex pb-2">
-                                <input id="cbx_withdrawal_add" value="Add" type="checkbox" class="cbx cbx_withdrawal me-2" role="button" disabled />
-                                <label role="button" for="cbx_withdrawal_add">Add</label>
-                            </div>
-                            <div class="d-flex pb-2">
-                                <input id="cbx_withdrawal_edit" value="Edit" type="checkbox" class="cbx cbx_withdrawal me-2" role="button" disabled />
-                                <label role="button" for="cbx_withdrawal_edit">Edit</label>
-                            </div>
-                            <div class="d-flex pb-2">
-                                <input id="cbx_withdrawal_delete" value="Delete" type="checkbox" class="cbx cbx_withdrawal me-2" role="button" disabled />
-                                <label role="button" for="cbx_withdrawal_delete">Delete</label>
                             </div>
                         </div>
                     </div>

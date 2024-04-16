@@ -93,40 +93,105 @@ $(document).ready(function () {
         $("select[name=item_list]").append(_str_items);
     });
 
-    // console.log(_arr_items);
-    // console.log(_arr_items[0]);
+    //USER ACCESS
+    var user = $("input[name=username]").val();
 
-    // for(var i of _arr_items){
-    //     console.log(i);
-    // }
+    $.post("./includes/select.php", {
+        requestType: "Access_Control",
+        username: user,
+    }).done(function (data) {
+        var data_purchase = data[0].purchase;
+        var data_delivery = data[0].delivery;
+        var data_inventory = data[0].inventory;
+        var data_withdrawal = data[0].withdrawal;
+        var data_userAccess = data[0].user_access;
+        var data_management = data[0].user_management;
 
-    // console.log(_str_items);
-});
+        //FOR TESTING
+        // console.log("purchase:"+data_purchase);
+        // console.log("delivery: "+data_delivery);
+        // console.log("inventory: "+data_inventory);
+        // console.log("withdrawal: "+data_withdrawal);
+        // console.log("access: "+data_userAccess);
+        // console.log("management: "+data_management);
+
+        if (data_withdrawal == "None") {
+            location.href = "dashboard.php";
+        }
+
+        if (data_purchase != "None" || data_withdrawal != "None") {
+            $("#link_requests").removeClass("d-none");
+        } else {
+            if (data_purchase != "None") {
+                $("#link_pr").removeClass("d-none");
+            }
+            if (data_withdrawal != "None") {
+                $("#link_withdrawal").removeClass("d-none");
+            }
+        }
+
+        if (data_delivery != "None") {
+            $("#link_delivery").removeClass("d-none");
+        }
+        if (data_inventory != "None") {
+            $("#link_inventory").removeClass("d-none");
+        }
+
+        if (data_management != "None" || data_userAccess != "None") {
+            $("#link_users").removeClass("d-none");
+        } else {
+            if (data_management != "None") {
+                $("#link_management").removeClass("d-none");
+            }
+            if (data_userAccess != "None") {
+                $("#link_accessControl").removeClass("d-none");
+            }
+        }
+
+        if (!data_withdrawal.includes("Add")) {
+            $("#addRequest").prop('disabled', true);
+        }
+        if (!data_withdrawal.includes("Edit")) {
+            $('button[name=modify]').remove();
+        }
+        if (!data_withdrawal.includes("Delete")) {
+            $('button[name=delete]').remove();
+        }
+    }); //end of User Access
+}); //end of ready document
 
 $("li[name=logout]").click(() => {
     $.post("includes/logout.php");
 });
 
 // ON EVENTS
-$(document).on("keydown", "td[data-col=qty], input[name=request_slip_num], input[name=details_req_slip_num]", function (event) {
-    var key = String.fromCharCode(event.which);
-    var regex = /^\d+$/; // Regex for only digits
+$(document).on(
+    "keydown",
+    "td[data-col=qty], input[name=request_slip_num], input[name=details_req_slip_num]",
+    function (event) {
+        var key = String.fromCharCode(event.which);
+        var regex = /^\d+$/; // Regex for only digits
 
-    // Allow backspace and delete keys
-    if (event.keyCode === 8 || event.keyCode === 46 || event.keyCode === 9) {
-        return true;
-    }
+        // Allow backspace and delete keys
+        if (
+            event.keyCode === 8 ||
+            event.keyCode === 46 ||
+            event.keyCode === 9
+        ) {
+            return true;
+        }
 
-    if (event.keyCode > 95 && event.keyCode < 106) {
-        return true;
-    }
+        if (event.keyCode > 95 && event.keyCode < 106) {
+            return true;
+        }
 
-    // Allow only digits and prevent default action for others
-    if (!regex.test(key)) {
-        event.preventDefault();
-        return false;
+        // Allow only digits and prevent default action for others
+        if (!regex.test(key)) {
+            event.preventDefault();
+            return false;
+        }
     }
-});
+);
 
 // $("#table_main").DataTable({
 //     paging: false,
@@ -385,8 +450,7 @@ $("#table_main tbody").on("click", "tr", function () {
     _selected_item = _rowdata.item;
     _selected_item_id = _rowdata.id;
     console.log(_rowdata);
-    var intendedfor = (_rowdata.intended_for != "")? _rowdata.intended_for : "";
-
+    var intendedfor = _rowdata.intended_for != "" ? _rowdata.intended_for : "";
 
     $("div[name=toast_delete_msg]").html(""); //Reset
     $("div[name=toast_delete_msg]").append(
@@ -469,7 +533,7 @@ $("button[name=discard]").click(() => {
     $("button[name=saveChanges]").hide();
 
     $("#table_details td[data-col=item] select").remove();
-    var intendedfor = (_rowdata.intended_for != "")? _rowdata.intended_for : "";
+    var intendedfor = _rowdata.intended_for != "" ? _rowdata.intended_for : "";
 
     //Set Field Data
     $("input[name=details_req_slip_num]").val(_rowdata.request_slip_num);

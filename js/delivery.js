@@ -85,7 +85,73 @@ $(document).ready(function () {
             }
         }
     });
-});
+
+    //USER ACCESS
+    var user = $("input[name=username]").val();
+
+    $.post("./includes/select.php", {
+        requestType: "Access_Control",
+        username: user,
+    }).done(function (data) {
+        var data_purchase = data[0].purchase;
+        var data_delivery = data[0].delivery;
+        var data_inventory = data[0].inventory;
+        var data_withdrawal = data[0].withdrawal;
+        var data_userAccess = data[0].user_access;
+        var data_management = data[0].user_management;
+
+        //FOR TESTING
+        // console.log("purchase:"+data_purchase);
+        // console.log("delivery: "+data_delivery);
+        // console.log("inventory: "+data_inventory);
+        // console.log("withdrawal: "+data_withdrawal);
+        // console.log("access: "+data_userAccess);
+        // console.log("management: "+data_management);
+
+        if (data_delivery == "None") {
+            location.href = "dashboard.php";
+        }
+
+        if (data_purchase != "None" || data_withdrawal != "None") {
+            $("#link_requests").removeClass("d-none");
+        } else {
+            if (data_purchase != "None") {
+                $("#link_pr").removeClass("d-none");
+            }
+            if (data_withdrawal != "None") {
+                $("#link_withdrawal").removeClass("d-none");
+            }
+        }
+
+        if (data_delivery != "None") {
+            $("#link_delivery").removeClass("d-none");
+        }
+        if (data_inventory != "None") {
+            $("#link_inventory").removeClass("d-none");
+        }
+
+        if (data_management != "None" || data_userAccess != "None") {
+            $("#link_users").removeClass("d-none");
+        } else {
+            if (data_management != "None") {
+                $("#link_management").removeClass("d-none");
+            }
+            if (data_userAccess != "None") {
+                $("#link_accessControl").removeClass("d-none");
+            }
+        }
+
+        if (!data_delivery.includes("Add")) {
+            $("#addRequest").prop("disabled", true);
+        }
+        if (!data_delivery.includes("Edit")) {
+            $('button[name=modify]').remove();
+        }
+        if (!data_delivery.includes("Delete")) {
+            $('button[name=delete]').remove();
+        }
+    }); //end of User Access
+}); //end of ready document
 
 $("li[name=logout]").click(() => {
     $.post("includes/logout.php");
@@ -316,10 +382,10 @@ $("button[name=add]").click(() => {
     // console.log(is_ready);
     // console.log(data_item);
     // console.log(data_pr);
-    console.log(data_pr_qty);
+    // console.log(data_pr_qty);
     // console.log(data_qty);
-    console.log(data_uom);
-    console.log(data_date_of_delivery);
+    // console.log(data_uom);
+    // console.log(data_date_of_delivery);
     // console.log(data_DR_number);
     // console.log(data_supplier);
     // console.log(data_status);
@@ -361,16 +427,42 @@ $("button[name=add]").click(() => {
                     table.ajax.reload();
 
                     //RESET INPUTS
-                    var selector = $('select[name=itemlist]');
-                    var default_qty = $('select[name=itemlist] option:selected').data('qty');
-                    var default_uom = $('select[name=itemlist] option:selected').data('uom');
-                    selector.find('option:first').prop('selected', true);
+                    var selector = $("select[name=itemlist]");
+                    var default_qty = $(
+                        "select[name=itemlist] option:selected"
+                    ).data("qty");
+                    var default_uom = $(
+                        "select[name=itemlist] option:selected"
+                    ).data("uom");
+                    selector.find("option:first").prop("selected", true);
                     selector.parent().next().text(default_qty);
                     selector.parent().next().next().text(default_uom);
-                    selector.parent().next().next().next().find('input').val('');
-                    selector.parent().next().next().next().next().text('');
-                    selector.parent().next().next().next().next().next().text('');
-                    selector.parent().next().next().next().next().next().next().find('select').val('Pending');
+                    selector
+                        .parent()
+                        .next()
+                        .next()
+                        .next()
+                        .find("input")
+                        .val("");
+                    selector.parent().next().next().next().next().text("");
+                    selector
+                        .parent()
+                        .next()
+                        .next()
+                        .next()
+                        .next()
+                        .next()
+                        .text("");
+                    selector
+                        .parent()
+                        .next()
+                        .next()
+                        .next()
+                        .next()
+                        .next()
+                        .next()
+                        .find("select")
+                        .val("Pending");
                 }
             }
         );

@@ -8,50 +8,59 @@ var xValues = ["Maximum", "Safe", "Minimum", "Critical"];
 var yValues = [];
 var barColors = [blue, green, yellow, red];
 
-$(document).ready(() => {
+$(document).ready(function(){
     var user = $("input[name=username]").val();
-
-	$.post("./includes/select.php", {
+    
+    //USER ACCESS
+    $.post("./includes/select.php", {
         requestType: "Access_Control",
         username: user
-    }, function(data){
-        console.log(data);
+    }).done(function(data){
         var data_purchase = data[0].purchase;
+        var data_withdrawal = data[0].withdrawal;
         var data_delivery = data[0].delivery;
         var data_inventory = data[0].inventory;
-        var data_withdrawal = data[0].withdrawal;
         var data_userAccess = data[0].user_access;
         var data_management = data[0].user_management;
+        
+        console.log("purchase:"+data_purchase);
+        console.log("withdrawal: "+data_withdrawal);
+        console.log("delivery: "+data_delivery);
+        console.log("inventory: "+data_inventory);
+        console.log("access: "+data_userAccess);
+        console.log("management: "+data_management);
 
-        fx_none(data_purchase, 'pr');
-        fx_none(data_delivery, 'delivery');
-        fx_none(data_inventory, 'inventory');
-        fx_none(data_withdrawal, 'withdrawal');
-        fx_none(data_userAccess, 'accessControl');
-        fx_none(data_management, 'management');
-
-        function fx_none(data, page){
-            if(!data.includes('None')){
-                $(`#link_${page}`).removeClass('d-none');
-                if(page == ('pr' || 'withdrawal')){
-                    $('#link_requests').removeClass('d-none');
-                }
-                if(page == ('accessControl' || 'management')){
-                    $('#link_users').removeClass('d-none');
-                }
+        if(data_purchase != "None" || data_withdrawal != "None"){
+            $('#link_requests').removeClass('d-none');
+        }else{
+            if(data_purchase != "None"){
+                $('#link_pr').removeClass('d-none');
+            }
+            if(data_withdrawal != "None"){
+                $('#link_withdrawal').removeClass('d-none');
             }
         }
 
-        // if(data_purchase == "View"){
+        if(data_delivery != "None"){
+            $('#link_delivery').removeClass('d-none');
+        }
+        if(data_inventory != "None"){
+            $('#link_inventory').removeClass('d-none');
+        }
+        
+        if(data_management != "None" || data_userAccess != "None"){
+            $('#link_users').removeClass('d-none');
+        }else{
+            if(data_management != "None"){
+                $('#link_management').removeClass('d-none');
+            }
+            if(data_userAccess != "None"){
+                $('#link_accessControl').removeClass('d-none');
+            }
+        }
+	}); //end of User Access
 
-        // }
-
-        // console.log(!(data[0].inventory).includes('None'));
-        // if(!(data[0].inventory).includes('None')){
-        //     $('#link_inventory').removeClass('d-none');
-        // }
-	});
-});
+}); //end of ready document
 
 
 $("li[name=logout]").click(() => {

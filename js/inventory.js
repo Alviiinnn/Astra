@@ -146,7 +146,79 @@ $(document).ready(function () {
         // }
         // $("select[name=item_list]").append(_str_items);
     });
-});
+
+    //USER ACCESS
+    var user = $("input[name=username]").val();
+
+    $.post("./includes/select.php", {
+        requestType: "Access_Control",
+        username: user
+    }).done(function (data) {
+        var data_purchase = data[0].purchase;
+        var data_delivery = data[0].delivery;
+        var data_inventory = data[0].inventory;
+        var data_withdrawal = data[0].withdrawal;
+        var data_userAccess = data[0].user_access;
+        var data_management = data[0].user_management;
+
+        //FOR TESTING
+        console.log("purchase:"+data_purchase);
+        console.log("delivery: "+data_delivery);
+        console.log("inventory: "+data_inventory);
+        console.log("withdrawal: "+data_withdrawal);
+        console.log("access: "+data_userAccess);
+        console.log("management: "+data_management);
+
+        if(data_inventory == "None"){
+            location.href = "dashboard.php";
+        }
+
+        if (data_purchase != "None" || data_withdrawal != "None") {
+            $("#link_requests").removeClass("d-none");
+            if (data_purchase != "None") {
+                $("#link_pr").removeClass("d-none");
+            }
+            if (data_withdrawal != "None") {
+                $("#link_withdrawal").removeClass("d-none");
+            }
+        } else {
+
+        }
+
+        if (data_delivery != "None") {
+            $("#link_delivery").removeClass("d-none");
+        }
+        if (data_inventory != "None") {
+            $("#link_inventory").removeClass("d-none");
+        }
+
+        if (data_management != "None" || data_userAccess != "None") {
+            $("#link_users").removeClass("d-none");
+            if (data_management != "None") {
+                $("#link_management").removeClass("d-none");
+            }
+            if (data_userAccess != "None") {
+                $("#link_accessControl").removeClass("d-none");
+            }
+        } else {
+            // if (data_management != "None") {
+            //     $("#link_management").removeClass("d-none");
+            // }
+            // if (data_userAccess != "None") {
+            //     $("#link_accessControl").removeClass("d-none");
+            // }
+        }
+
+        if (!data_inventory.includes("Edit")) {
+            $('button[name=modify]').remove();
+        }
+        if (!data_inventory.includes("Delete")) {
+            $('button[name=delete]').remove();
+        }
+
+    }); //end of User Access
+
+}); //end of ready document
 
 $("li[name=logout]").click(() => {
     $.post("includes/logout.php");
@@ -351,9 +423,9 @@ $("#table_main tbody").on("click", "tr", function () {
     console.log(_rowdata);
 
     $("div[name=toast_delete_msg]").append(""); //Reset
-    $("div[name=toast_delete_msg]").html("").append(
-        `Are you sure to delete <b>${_selected_item}?</b>`
-    );
+    $("div[name=toast_delete_msg]")
+        .html("")
+        .append(`Are you sure to delete <b>${_selected_item}?</b>`);
 
     $("#table_details td[data-col=item]").text(_rowdata.item);
     $("#table_details td[data-col=category]").text(_rowdata.category);
@@ -484,13 +556,22 @@ $("button[name=saveChanges]").click(() => {
     var input_uom = $("#table_details td[data-col=uom] select").val();
 
     //Validation
-    if(input_qty > _rowdata.requested_stock){
-        $('div[name=warning_general]').html("<b>Qty</b> must be less than or equal to <b>Requested Stock</b>!").removeClass('d-none').addClass('d-block');
-        $("#table_details td[data-col=qty]").addClass('border border-danger');
-    }else{
-        $('div[name=warning_general]').removeClass('d-block').addClass('d-none');
-        $("#table_details td[data-col=qty]").removeClass('border border-danger');
-        
+    if (input_qty > _rowdata.requested_stock) {
+        $("div[name=warning_general]")
+            .html(
+                "<b>Qty</b> must be less than or equal to <b>Requested Stock</b>!"
+            )
+            .removeClass("d-none")
+            .addClass("d-block");
+        $("#table_details td[data-col=qty]").addClass("border border-danger");
+    } else {
+        $("div[name=warning_general]")
+            .removeClass("d-block")
+            .addClass("d-none");
+        $("#table_details td[data-col=qty]").removeClass(
+            "border border-danger"
+        );
+
         $.post(
             "./includes/update.php",
             {
@@ -524,6 +605,4 @@ $("button[name=saveChanges]").click(() => {
     // console.log(input_uom);
     // console.log(input_unitcost);
     // console.log(input_remarks);
-
-
 });

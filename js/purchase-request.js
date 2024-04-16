@@ -8,6 +8,14 @@ var _selected_item;
 var _selected_item_id;
 var _rowdata;
 
+//Initialize Tooltip
+const tooltipTriggerList = document.querySelectorAll(
+    '[data-bs-toggle="tooltip"]'
+);
+const tooltipList = [...tooltipTriggerList].map(
+    (tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl)
+);
+
 $(document).ready(function () {
     $("#table_main").DataTable({
         ajax: {
@@ -72,7 +80,84 @@ $(document).ready(function () {
         //         });
         // },
     });
-});
+
+    //USER ACCESS
+    var user = $("input[name=username]").val();
+
+    $.post("./includes/select.php", {
+        requestType: "Access_Control",
+        username: user,
+    }).done(function (data) {
+        var data_purchase = data[0].purchase;
+        var data_delivery = data[0].delivery;
+        var data_inventory = data[0].inventory;
+        var data_withdrawal = data[0].withdrawal;
+        var data_userAccess = data[0].user_access;
+        var data_management = data[0].user_management;
+
+        //FOR TESTING
+        console.log("purchase:" + data_purchase);
+        console.log("delivery: " + data_delivery);
+        console.log("inventory: " + data_inventory);
+        console.log("withdrawal: " + data_withdrawal);
+        console.log("access: " + data_userAccess);
+        console.log("management: " + data_management);
+
+        if(data_purchase == "None"){
+            location.href = "dashboard.php";
+        }
+
+        if (data_purchase != "None" || data_withdrawal != "None") {
+            $("#link_requests").removeClass("d-none");
+        } else {
+            if (data_purchase != "None") {
+                $("#link_pr").removeClass("d-none");
+            }
+            if (data_withdrawal != "None") {
+                $("#link_withdrawal").removeClass("d-none");
+            }
+        }
+
+        if (data_delivery != "None") {
+            $("#link_delivery").removeClass("d-none");
+        }
+        if (data_inventory != "None") {
+            $("#link_inventory").removeClass("d-none");
+        }
+
+        if (data_management != "None" || data_userAccess != "None") {
+            $("#link_users").removeClass("d-none");
+        } else {
+            if (data_management != "None") {
+                $("#link_management").removeClass("d-none");
+            }
+            if (data_userAccess != "None") {
+                $("#link_accessControl").removeClass("d-none");
+            }
+        }
+
+        //Specific for PR Page
+        if (!data_purchase.includes("Add")) {
+            $("#addRequest").prop('disabled', true);
+            // $("#addRequest").css('visibility', 'hidden');
+
+            // $("#addRequest")
+            //     .removeAttr("data-bs-target")
+            //     .removeAttr("data-bs-toggle")
+            //     .attr({
+            //         "data-bs-toggle": "tooltip",
+            //         "data-bs-placement": "top",
+            //         "data-bs-title": "This button are disabled by admin"
+            //     });
+        }
+        if (!data_purchase.includes("Edit")) {
+            $("button[name=modify]").remove();
+        }
+        if (!data_purchase.includes("Delete")) {
+            $("button[name=delete]").remove();
+        }
+    }); //end of User Access
+}); //end of document ready
 
 $("li[name=logout]").click(() => {
     $.post("includes/logout.php");
@@ -173,7 +258,8 @@ $("button[name=addRow]").click(() => {
     var ctr = $("#table_form tr").length;
     var row = "<tr>";
     row += `<td>${ctr}</td>`;
-    row += "<td contenteditable data-col='item' data-required='1' class='text-start'></td>";
+    row +=
+        "<td contenteditable data-col='item' data-required='1' class='text-start'></td>";
     row += "<td contenteditable data-int='1' data-col='qty_per_unit'></td>";
     row += "<td data-dropdown='1' data-col='uom'>";
     row += "    <select class='form-select border-0'>";
@@ -409,10 +495,14 @@ $("#table_main tbody").on("click", "tr", function () {
     $("#table_details td[data-col=item]").text(_rowdata.item);
     $("#table_details td[data-col=qty_per_unit]").text(_rowdata.qty_per_unit);
     $("#table_details td[data-col=uom]").text(_rowdata.uom);
-    $("#table_details td[data-col=unit_per_batch]").text(_rowdata.unit_per_batch);
+    $("#table_details td[data-col=unit_per_batch]").text(
+        _rowdata.unit_per_batch
+    );
     $("#table_details td[data-col=unitcost]").text(_rowdata.unitcost);
     $("#table_details td[data-col=total_qty]").text(_rowdata.total_qty);
-    $("#table_details td[data-col=amount_per_unit]").text(_rowdata.amount_per_unit);
+    $("#table_details td[data-col=amount_per_unit]").text(
+        _rowdata.amount_per_unit
+    );
     $("#table_details td[data-col=total_amount]").text(_rowdata.total_amount);
     $("#table_details td[data-col=remarks]").text(_rowdata.remarks);
     $("input[name=details_phase]").val(_rowdata.phase);
@@ -476,14 +566,16 @@ $("button[name=modify]").click(() => {
     $("input[name=pr_num]").prop("disabled", false);
     $("#table_details td[data-col=item]").prop("contenteditable", true);
     $("#table_details td[data-col=qty_per_unit]").prop("contenteditable", true);
-    $("#table_details td[data-col=unit_per_batch]").prop("contenteditable", true);
+    $("#table_details td[data-col=unit_per_batch]").prop(
+        "contenteditable",
+        true
+    );
     $("#table_details td[data-col=unitcost]").prop("contenteditable", true);
     $("#table_details td[data-col=remarks]").prop("contenteditable", true);
     $("input[name=details_phase]").prop("disabled", false);
     $("input[name=details_block]").prop("disabled", false);
     $("input[name=details_lot]").prop("disabled", false);
     $("select[name=details_status]").prop("disabled", false);
-
 });
 
 // Discard Changes on Selected Item
@@ -500,7 +592,9 @@ $("button[name=discard]").click(() => {
     $("input[name=pr_num]").prop("disabled", true);
     $("#table_details td[data-col=item]").removeAttr("contenteditable");
     $("#table_details td[data-col=qty_per_unit]").removeAttr("contenteditable");
-    $("#table_details td[data-col=unit_per_batch]").removeAttr("contenteditable");
+    $("#table_details td[data-col=unit_per_batch]").removeAttr(
+        "contenteditable"
+    );
     $("#table_details td[data-col=unitcost]").removeAttr("contenteditable");
     $("#table_details td[data-col=remarks]").removeAttr("contenteditable");
     $("input[name=details_phase]").prop("disabled", true);
@@ -512,10 +606,14 @@ $("button[name=discard]").click(() => {
     $("#table_details td[data-col=item]").text(_rowdata.item);
     $("#table_details td[data-col=qty_per_unit]").text(_rowdata.qty_per_unit);
     $("#table_details td[data-col=uom]").text(_rowdata.uom);
-    $("#table_details td[data-col=unit_per_batch]").text(_rowdata.unit_per_batch);
+    $("#table_details td[data-col=unit_per_batch]").text(
+        _rowdata.unit_per_batch
+    );
     $("#table_details td[data-col=unitcost]").text(_rowdata.unitcost);
     $("#table_details td[data-col=total_qty]").text(_rowdata.total_qty);
-    $("#table_details td[data-col=amount_per_unit]").text(_rowdata.amount_per_unit);
+    $("#table_details td[data-col=amount_per_unit]").text(
+        _rowdata.amount_per_unit
+    );
     $("#table_details td[data-col=total_amount]").text(_rowdata.total_amount);
     $("#table_details td[data-col=remarks]").text(_rowdata.remarks);
     $("input[name=details_phase]").val(_rowdata.phase);
@@ -528,13 +626,21 @@ $("button[name=discard]").click(() => {
 $("button[name=saveChanges]").click(() => {
     var input_pr_num = $("input[name=pr_num]").val();
     var input_item = $("#table_details td[data-col=item]").text();
-    var input_qty_per_unit = $("#table_details td[data-col=qty_per_unit]").text();
+    var input_qty_per_unit = $(
+        "#table_details td[data-col=qty_per_unit]"
+    ).text();
     var input_uom = $("#table_details td[data-col=uom] select").val();
-    var input_unit_per_batch = $("#table_details td[data-col=unit_per_batch]").text();
+    var input_unit_per_batch = $(
+        "#table_details td[data-col=unit_per_batch]"
+    ).text();
     var input_unitcost = $("#table_details td[data-col=unitcost]").text();
     var input_total_qty = $("#table_details td[data-col=total_qty]").text();
-    var input_amount_per_unit = $("#table_details td[data-col=amount_per_unit]").text();
-    var input_total_amount = $("#table_details td[data-col=total_amount]").text();
+    var input_amount_per_unit = $(
+        "#table_details td[data-col=amount_per_unit]"
+    ).text();
+    var input_total_amount = $(
+        "#table_details td[data-col=total_amount]"
+    ).text();
     var input_remarks = $("#table_details td[data-col=remarks]").text();
     var input_status = $("select[name=details_status]").val();
     var input_phase = $("input[name=details_phase]").val();
@@ -581,7 +687,7 @@ $("button[name=saveChanges]").click(() => {
             data_phase: input_phase,
             data_block: input_block,
             data_lot: input_lot,
-            data_status: input_status
+            data_status: input_status,
         },
         function (data) {
             console.log(data);

@@ -63,3 +63,8 @@ a{
 .c-card-shadow:hover{
     box-shadow: 2px 4px 5px rgba(0, 0, 0, 0.3);
 }
+
+.not-allowed:hover{
+    cursor: not-allowed;
+    cursor: no-drop;
+}
