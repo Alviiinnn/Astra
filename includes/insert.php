@@ -111,6 +111,29 @@ if ($request_type == "Add_Material_Request") {
         } else {
             echo "Error " . $sql . "<br>" . $conn->error;
         }
+
+        //Reduce Item Inventory Stock based on Requested Quantity
+        if ($req_status == "Released") {
+            $new_stock_count = 0;
+            $sql_stock = "SELECT stock FROM inventory_tbl WHERE item_id = '$item_id[$i]' ";
+            $result = $conn->query($sql_stock);
+            if ($result->num_rows > 0) {
+                $row = $result->fetch_assoc();
+                $new_stock_count = $row['stock'] - $qty;
+            }
+
+            if ($new_stock_count != 0) {
+                $sql_updateStock = "UPDATE inventory_tbl 
+                SET stock = '$new_stock_count' 
+                WHERE item_id = '$item_id[$i]' ";
+
+                if ($conn->query($sql_updateStock) === TRUE) {
+                    echo "<br>Inventory is Updated!"; //DO NOT REMOVE THE WORD 'SUCCESS' | Reference: material-request.js
+                } else {
+                    echo "Error " . $sql . "<br>" . $conn->error;
+                }
+            }
+        }
     }
 }
 
@@ -148,17 +171,16 @@ if ($request_type == "Add_Delivery") {
             echo "Error " . $sql . "<br>" . $conn->error;
         }
 
-        if($status[$i] == "Received"){
+        if ($status[$i] == "Received") {
             $sql_inventory = "INSERT INTO inventory_tbl (item_name, pr_number, stock, base_stock, unit_of_measurement) 
             VALUES ('$item[$i]', '$pr[$i]', '$qty[$i]', '$pr_qty[$i]', '$uom[$i]')";
-    
+
             if ($conn->query($sql_inventory) === TRUE) {
                 echo "Insert Success!"; //DO NOT REMOVE THE WORD 'SUCCESS' | Reference: inventory.js
             } else {
                 echo "Error " . $sql . "<br>" . $conn->error;
             }
         }
-
     }
 }
 
