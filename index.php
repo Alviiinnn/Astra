@@ -34,13 +34,16 @@ if (isset($_SESSION['username'])) {
                         <form id="login" method="POST" action="">
                             <div class="mb-3">
                                 <input type="text" class="form-control rounded-1" id="username" name="username" placeholder="Username" required>
+                                <input type="text" class="form-control rounded-1 d-none" id="resetpass_username" name="resetpass_username" placeholder="Username" required>
                             </div>
                             <div class="mb-3">
                                 <input type="password" class="form-control rounded-1" id="password" name="password" placeholder="Password" required>
                             </div>
                             <div class="d-grid gap-2">
-                                <button type="submit" class="btn c-bg-green text-white shadow">LOGIN</button>
-                                <label><a href="#" class="text-white">Forgot Password</a></label>
+                                <button id="btnlogin" type="submit" class="btn c-bg-green text-white shadow">LOGIN</button>
+                                <button id="resetPass" type="button" class="btn c-bg-green text-white shadow d-none">Reset Password</button>
+                                <p id="forgotPassword" class="text-white" type="button">Forgot Password</p>
+                                <p id="cancel" class="text-white d-none" type="button">Cancel</p>
                             </div>
                         </form>
                     </div>
