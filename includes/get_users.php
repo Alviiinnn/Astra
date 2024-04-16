@@ -12,7 +12,7 @@ if ($result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
         $ctr++;
 
-        if($row['user_status'] == "Password Reset"){
+        if($row['user_status'] == "Reset" && $row['temp_password'] == ""){
             $password = "<p style='color:red;'><b><i>This user requested to reset their password</i></b></p>";            
         }else{
             $password = ($row['temp_password'])? $row['temp_password'] : substr($row['user_password'], 0, 50);

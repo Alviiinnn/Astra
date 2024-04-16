@@ -8,7 +8,7 @@ $sql = "SELECT * FROM user_tbl WHERE user_name = '$username'";
 $result = $conn->query($sql);
 
 if($result->num_rows > 0){
-    $sql_reset = "UPDATE user_tbl SET user_status='Password Reset', temp_password='' WHERE user_name = '$username' ";
+    $sql_reset = "UPDATE user_tbl SET user_status='Reset', temp_password='' WHERE user_name = '$username' ";
 
     if ($conn->query($sql_reset) === TRUE) {
         echo "Update Success!"; //DO NOT REMOVE THE WORD 'SUCCESS' | Reference: login.js

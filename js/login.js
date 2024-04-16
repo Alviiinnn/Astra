@@ -15,14 +15,18 @@ $("#login").on("submit", function (e) {
                 alert("Sorry, your account is disabled by the Admin.");
             }
 
-            if(data.includes("Not_Yet_Reset")){
-                alert("You submitted a request to reset your password.\nWait for the Admin to give your temporary password.");
+            if (data.includes("Not_Yet_Reset")) {
+                alert(
+                    "You submitted a request to reset your password.\nWait for the Admin to give your temporary password."
+                );
             }
 
             if (data.includes("Reset_Password")) {
-                alert("Your password has been reset by the Admin");
-                $('form[name=login]').hide();
-                $('form[name=setNewPassword]').removeClass('d-none');
+                alert("You used the temporary password given by the Admin.\nChange your password now!");
+                $("form[name=login]").hide();
+                $("form[name=setNewPassword]").removeClass("d-none");
+                $('#ims').text('Create New Password');
+                $('input[name=username_changepass]').val($('#username').val());
             }
 
             if (data.includes("Incorrect_Password")) {
@@ -35,6 +39,27 @@ $("#login").on("submit", function (e) {
             }
         }
     );
+});
+
+$("form[name=setNewPassword]").on("submit", function (e) {
+    e.preventDefault();
+    var new_pass = $("#new_password").val();
+    var confirm_pass = $("#confirm_newpass").val();
+
+    if (new_pass != confirm_pass) {
+        alert("Password not matched!");
+    } else {
+        $.post(
+            "./includes/change_pass.php",
+            $("form[name=setNewPassword]").serialize(),
+            function (data) {
+                if(data.includes('Success')){
+                    alert('Password Changed Successfully!\nYou may try to login now');
+                    location.reload();
+                }
+            }
+        );
+    }
 });
 
 $("#forgotPassword").click(() => {

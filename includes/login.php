@@ -23,10 +23,14 @@ if ($result->num_rows > 0) {
                 echo "Incorrect_Password! " . $row['user_password'];     //WARNING! Do not change this STRING! //Reference: login.js
             }
         } else if ($row['user_status'] == 'Reset') {
-            if ($row['temp_password'] == "") {
-                echo "Not_Yet_Reset!";
+            if (password_verify($password, $row['user_password'])) {
+                if ($row['temp_password'] == "") {
+                    echo "Not_Yet_Reset!";
+                } else {
+                    echo "Reset_Password!";
+                }
             } else {
-                echo "Reset_Password!";
+                echo "Incorrect_Password!";     //WARNING! Do not change this STRING! //Reference: login.js
             }
         } else {
             echo "Disabled_User!";  //WARNING! Do not change this STRING! //Reference: login.js
