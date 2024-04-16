@@ -162,12 +162,12 @@ $(document).ready(function () {
         var data_management = data[0].user_management;
 
         //FOR TESTING
-        console.log("purchase:"+data_purchase);
-        console.log("delivery: "+data_delivery);
-        console.log("inventory: "+data_inventory);
-        console.log("withdrawal: "+data_withdrawal);
-        console.log("access: "+data_userAccess);
-        console.log("management: "+data_management);
+        // console.log("purchase:"+data_purchase);
+        // console.log("delivery: "+data_delivery);
+        // console.log("inventory: "+data_inventory);
+        // console.log("withdrawal: "+data_withdrawal);
+        // console.log("access: "+data_userAccess);
+        // console.log("management: "+data_management);
 
         if(data_inventory == "None"){
             location.href = "dashboard.php";

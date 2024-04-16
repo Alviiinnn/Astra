@@ -23,7 +23,7 @@ if ($result->num_rows == 0) {
     }
 
     $sql_userAccess = "INSERT INTO user_access_tbl (username, purchase, delivery, inventory, withdrawal, user_access, user_management)
-        VALUES ('$username', 'None', 'None', 'None', 'View, Add, Edit, Delete', 'None', 'None')";
+        VALUES ('$username', 'None', 'None', 'View', 'None', 'None', 'None')";
 
     if ($conn->query($sql_userAccess) === TRUE) {
         echo "Insert User_Access_Success!"; //DO NOT REMOVE THE WORD 'User_Access_Success' | Reference: user-access.js

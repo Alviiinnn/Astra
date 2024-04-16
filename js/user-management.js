@@ -56,12 +56,12 @@ $(document).ready(function () {
         var data_userAccess = data[0].user_access;
         var data_management = data[0].user_management;
 
-        console.log("purchase:" + data_purchase);
-        console.log("withdrawal: " + data_withdrawal);
-        console.log("delivery: " + data_delivery);
-        console.log("inventory: " + data_inventory);
-        console.log("access: " + data_userAccess);
-        console.log("management: " + data_management);
+        // console.log("purchase:" + data_purchase);
+        // console.log("withdrawal: " + data_withdrawal);
+        // console.log("delivery: " + data_delivery);
+        // console.log("inventory: " + data_inventory);
+        // console.log("access: " + data_userAccess);
+        // console.log("management: " + data_management);
 
         if(data_management == "None"){
             location.href = "dashboard.php";

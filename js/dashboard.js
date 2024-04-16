@@ -22,13 +22,14 @@ $(document).ready(function(){
         var data_inventory = data[0].inventory;
         var data_userAccess = data[0].user_access;
         var data_management = data[0].user_management;
-        
-        console.log("purchase:"+data_purchase);
-        console.log("withdrawal: "+data_withdrawal);
-        console.log("delivery: "+data_delivery);
-        console.log("inventory: "+data_inventory);
-        console.log("access: "+data_userAccess);
-        console.log("management: "+data_management);
+
+        //For Testing
+        // console.log("purchase:"+data_purchase);
+        // console.log("withdrawal: "+data_withdrawal);
+        // console.log("delivery: "+data_delivery);
+        // console.log("inventory: "+data_inventory);
+        // console.log("access: "+data_userAccess);
+        // console.log("management: "+data_management);
 
         if(data_purchase != "None" || data_withdrawal != "None"){
             $('#link_requests').removeClass('d-none');
