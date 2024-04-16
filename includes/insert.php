@@ -119,13 +119,13 @@ if ($request_type == "Add_Material_Request") {
             $result = $conn->query($sql_stock);
             if ($result->num_rows > 0) {
                 $row = $result->fetch_assoc();
-                $new_stock_count = $row['stock'] - $qty;
+                $new_stock_count = $row['stock'] - $qty[$i];
             }
 
             if ($new_stock_count != 0) {
                 $sql_updateStock = "UPDATE inventory_tbl 
-                SET stock = '$new_stock_count' 
-                WHERE item_id = '$item_id[$i]' ";
+                    SET stock = '$new_stock_count' 
+                    WHERE item_id = '$item_id[$i]' ";
 
                 if ($conn->query($sql_updateStock) === TRUE) {
                     echo "<br>Inventory is Updated!"; //DO NOT REMOVE THE WORD 'SUCCESS' | Reference: material-request.js
