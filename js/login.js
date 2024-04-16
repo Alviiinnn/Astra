@@ -1,6 +1,5 @@
 $("#login").on("submit", function (e) {
     e.preventDefault();
-    alert();
     $.post(
         "./includes/login.php",
         $("#login").serialize(),
@@ -14,6 +13,16 @@ $("#login").on("submit", function (e) {
 
             if (data.includes("Disabled_User")) {
                 alert("Sorry, your account is disabled by the Admin.");
+            }
+
+            if(data.includes("Not_Yet_Reset")){
+                alert("You submitted a request to reset your password.\nWait for the Admin to give your temporary password.");
+            }
+
+            if (data.includes("Reset_Password")) {
+                alert("Your password has been reset by the Admin");
+                $('form[name=login]').hide();
+                $('form[name=setNewPassword]').removeClass('d-none');
             }
 
             if (data.includes("Incorrect_Password")) {

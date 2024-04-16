@@ -216,6 +216,7 @@ if (!isset($_SESSION['username'])) {
                                     <option value="0" selected disabled>- Select Status -</option>
                                     <option value="Active">Active</option>
                                     <option value="Disabled">Disabled</option>
+                                    <option value="Reset">Reset</option>
                                 </select>
                             </div>
                         </div>
