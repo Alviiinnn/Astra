@@ -169,6 +169,10 @@ if (!isset($_SESSION['username'])) {
                                                 <option>gal</option>
                                                 <option>tin</option>
                                                 <option>ltrs</option>
+                                                <option>cu. m</option>
+                                                <option>roll</option>
+                                                <option>can</option>
+                                                <option>set</option>
                                             </select>
                                         </td>
                                         <td contenteditable data-int="1" data-col="unit_per_batch"></td>

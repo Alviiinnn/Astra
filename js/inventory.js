@@ -266,6 +266,10 @@ $("button[name=addRow]").click(() => {
     row += "        <option>gal</option>";
     row += "        <option>tin</option>";
     row += "        <option>ltrs</option>";
+    row += "        <option>cu. m</option>";
+    row += "        <option>roll</option>";
+    row += "        <option>can</option>";
+    row += "        <option>set</option>";
     row += "    </select>";
     row += "</td>";
     row += "<td contenteditable data-int='1' data-col='unitcost'>0</td>";
@@ -500,6 +504,10 @@ $("button[name=modify]").click(() => {
         <option>gal</option>
         <option>tin</option>
         <option>ltrs</option>
+        <option>cu. m</option>
+        <option>roll</option>
+        <option>can</option>
+        <option>set</option>
     </select>`;
 
     $("#table_details td[data-col=category]")
